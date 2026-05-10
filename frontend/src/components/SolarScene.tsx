@@ -23,22 +23,29 @@ function Orbit({ radius }: { radius: number }) {
   )
 }
 
-function Planet() {
+type PlanetProps = {
+  label: string
+  position: [number, number, number]
+  color: string
+  size: number
+}
+
+function Planet({ label, position, color, size }: PlanetProps) {
   return (
-    <group position={[3, 0, 0]}>
+    <group position={position}>
       <mesh>
-        <sphereGeometry args={[0.35, 32, 32]} />
-        <meshStandardMaterial color="#3b82f6" />
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial color={color} />
       </mesh>
 
       <Text
-        position={[0, 0.65, 0]}
+        position={[0, size + 0.3, 0]}
         fontSize={0.22}
         color="white"
         anchorX="center"
         anchorY="middle"
       >
-        Compétences
+        {label}
       </Text>
     </group>
   )
@@ -63,7 +70,12 @@ function SolarScene() {
 
       <Sun />
       <Orbit radius={3} />
-      <Planet />
+      <Planet
+        label="Compétences"
+        position={[3, 0, 0]}
+        color="#3b82f6"
+        size={0.35}
+      />
 
       <OrbitControls />
     </Canvas>
