@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Billboard, OrbitControls, Stars, Text } from '@react-three/drei'
 import type { Group } from 'three'
+import InfoPanel from './InfoPanel'
 
 function Sun() {
   return (
@@ -27,6 +28,8 @@ function Orbit({ radius }: { radius: number }) {
 
 type PlanetData = {
   label: string
+  description: string
+  items: string[]
   color: string
   size: number
   orbitRadius: number
@@ -73,6 +76,8 @@ function Planet({ label, color, size, orbitRadius, angle, speed, onClick }: Plan
 const planets: PlanetData[] = [
   {
     label: 'Compétences',
+    description: 'Mes compétences principales en développement web et logiciel.',
+    items: ['React', 'TypeScript', 'C#', '.NET', 'Git', 'Azure DevOps'],
     color: '#3b82f6',
     size: 0.35,
     orbitRadius: 3,
@@ -81,6 +86,8 @@ const planets: PlanetData[] = [
   },
   {
     label: 'Expériences',
+    description: 'Mes expériences professionnelles et projets réalisés en entreprise.',
+    items: ['Développement .NET', 'Tests unitaires', 'CI/CD', 'Ticketing', 'Documentation'],
     color: '#22c55e',
     size: 0.45,
     orbitRadius: 4.5,
@@ -89,6 +96,8 @@ const planets: PlanetData[] = [
   },
   {
     label: 'Formation',
+    description: 'Mon parcours de formation dans le développement d’applications.',
+    items: ['CFC informaticien', 'Développement d’applications', 'Projets scolaires', 'Autoformation'],
     color: '#a855f7',
     size: 0.4,
     orbitRadius: 6,
@@ -97,6 +106,8 @@ const planets: PlanetData[] = [
   },
   {
     label: 'Mini-jeu',
+    description: 'Un mini-jeu inspiré de Space Invaders avec un système de score.',
+    items: ['Gameplay arcade', 'Scoreboard', 'Classement', 'Sauvegarde des scores'],
     color: '#f97316',
     size: 0.55,
     orbitRadius: 7.5,
@@ -141,6 +152,8 @@ function SolarScene() {
             angle={planet.angle}
             speed={planet.speed}
             onClick={() => setSelectedPlanet(planet)}
+            description={planet.description}
+            items={planet.items}
           />
         ))}
 
@@ -148,20 +161,12 @@ function SolarScene() {
       </Canvas>
 
       {selectedPlanet && (
-        <div className="absolute right-6 top-6 w-80 rounded-2xl bg-black/70 p-5 text-white backdrop-blur">
-          <h2 className="text-2xl font-bold">{selectedPlanet.label}</h2>
-
-          <p className="mt-3 text-sm text-slate-300">
-            Contenu de la section : {selectedPlanet.label}
-          </p>
-
-          <button
-            className="mt-4 rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
-            onClick={() => setSelectedPlanet(null)}
-          >
-            Fermer
-          </button>
-        </div>
+        <InfoPanel
+          title={selectedPlanet.label}
+          description={selectedPlanet.description}
+          items={selectedPlanet.items}
+          onClose={() => setSelectedPlanet(null)}
+        />
       )}
     </div>
   )
