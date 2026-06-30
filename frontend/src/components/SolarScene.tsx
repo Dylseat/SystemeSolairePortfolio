@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Billboard, OrbitControls, Stars, Text } from '@react-three/drei'
 import type { Group } from 'three'
@@ -25,14 +25,17 @@ function Orbit({ radius }: { radius: number }) {
   )
 }
 
-type PlanetProps = {
+type PlanetData = {
   label: string
   color: string
   size: number
   orbitRadius: number
   angle: number
   speed: number
-  onClick?: () => void
+}
+
+type PlanetProps = PlanetData & {
+  onClick: () => void
 }
 
 function Planet({ label, color, size, orbitRadius, angle, speed, onClick }: PlanetProps) {
@@ -67,7 +70,7 @@ function Planet({ label, color, size, orbitRadius, angle, speed, onClick }: Plan
   )
 }
 
-const planets: PlanetProps[] = [
+const planets: PlanetData[] = [
   {
     label: 'Compétences',
     color: '#3b82f6',
@@ -103,43 +106,64 @@ const planets: PlanetProps[] = [
 ]
 
 function SolarScene() {
+    const [selectedPlanet, setSelectedPlanet] = useState<PlanetData | null>(null)
+    
   return (
-    <Canvas camera={{ position: [0, 4, 10], fov: 60 }}>
-      <color attach="background" args={['#020617']} />
+    <div className="relative h-full w-full">
+      <Canvas camera={{ position: [0, 4, 10], fov: 60 }}>
+        <color attach="background" args={['#020617']} />
 
-      <ambientLight intensity={0.5} />
-      <pointLight position={[0, 0, 0]} intensity={30} />
+        <ambientLight intensity={0.5} />
+        <pointLight position={[0, 0, 0]} intensity={30} />
 
-      <Stars
-        radius={100}
-        depth={50}
-        count={4000}
-        factor={4}
-        fade
-        speed={1}
-      />
-
-      <Sun />
-
-      {planets.map((planet) => (
-        <Orbit key={`orbit-${planet.label}`} radius={planet.orbitRadius} />
-      ))}
-
-      {planets.map((planet) => (
-        <Planet
-          key={planet.label}
-          label={planet.label}
-          color={planet.color}
-          size={planet.size}
-          orbitRadius={planet.orbitRadius}
-          angle={planet.angle}
-          speed={planet.speed}
-          onClick={() => console.log(`${planet.label} clicked`)}
+        <Stars
+          radius={100}
+          depth={50}
+          count={4000}
+          factor={4}
+          fade
+          speed={1}
         />
-      ))}
 
-      <OrbitControls />
-    </Canvas>
+        <Sun />
+
+        {planets.map((planet) => (
+          <Orbit key={`orbit-${planet.label}`} radius={planet.orbitRadius} />
+        ))}
+
+        {planets.map((planet) => (
+          <Planet
+            key={planet.label}
+            label={planet.label}
+            color={planet.color}
+            size={planet.size}
+            orbitRadius={planet.orbitRadius}
+            angle={planet.angle}
+            speed={planet.speed}
+            onClick={() => setSelectedPlanet(planet)}
+          />
+        ))}
+
+        <OrbitControls />
+      </Canvas>
+
+      {selectedPlanet && (
+        <div className="absolute right-6 top-6 w-80 rounded-2xl bg-black/70 p-5 text-white backdrop-blur">
+          <h2 className="text-2xl font-bold">{selectedPlanet.label}</h2>
+
+          <p className="mt-3 text-sm text-slate-300">
+            Contenu de la section : {selectedPlanet.label}
+          </p>
+
+          <button
+            className="mt-4 rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
+            onClick={() => setSelectedPlanet(null)}
+          >
+            Fermer
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
 
