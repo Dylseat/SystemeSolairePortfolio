@@ -25,14 +25,18 @@ function Orbit({ radius }: { radius: number }) {
 
 type PlanetProps = {
   label: string
-  position: [number, number, number]
   color: string
   size: number
+  orbitRadius: number
+  angle: number
 }
 
-function Planet({ label, position, color, size }: PlanetProps) {
+function Planet({ label, color, size, orbitRadius, angle }: PlanetProps) {
+  const x = Math.cos(angle) * orbitRadius
+  const z = Math.sin(angle) * orbitRadius
+
   return (
-    <group position={position}>
+    <group position={[x, 0, z]}>
       <mesh>
         <sphereGeometry args={[size, 32, 32]} />
         <meshStandardMaterial color={color} />
@@ -50,6 +54,37 @@ function Planet({ label, position, color, size }: PlanetProps) {
     </group>
   )
 }
+
+const planets: PlanetProps[] = [
+  {
+    label: 'Compétences',
+    color: '#3b82f6',
+    size: 0.35,
+    orbitRadius: 3,
+    angle: 0,
+  },
+  {
+    label: 'Expériences',
+    color: '#22c55e',
+    size: 0.45,
+    orbitRadius: 4.5,
+    angle: Math.PI,
+  },
+  {
+    label: 'Formation',
+    color: '#a855f7',
+    size: 0.4,
+    orbitRadius: 6,
+    angle: Math.PI / 2,
+  },
+  {
+    label: 'Mini-jeu',
+    color: '#f97316',
+    size: 0.55,
+    orbitRadius: 7.5,
+    angle: -Math.PI / 4,
+  },
+]
 
 function SolarScene() {
   return (
@@ -70,38 +105,20 @@ function SolarScene() {
 
       <Sun />
 
-      <Orbit radius={3} />
-      <Orbit radius={4.5} />
-      <Orbit radius={6} />
-      <Orbit radius={7.5} />
+      {planets.map((planet) => (
+        <Orbit key={`orbit-${planet.label}`} radius={planet.orbitRadius} />
+      ))}
 
-      <Planet
-        label="Compétences"
-        position={[3, 0, 0]}
-        color="#3b82f6"
-        size={0.35}
-      />
-
-      <Planet
-        label="Expériences"
-        position={[-4.5, 0, 0]}
-        color="#22c55e"
-        size={0.45}
-      />
-
-      <Planet
-        label="Formation"
-        position={[0, 0, -6]}
-        color="#a855f7"
-        size={0.4}
-      />
-
-      <Planet
-        label="Mini-jeu"
-        position={[7.5, 0, 0]}
-        color="#f97316"
-        size={0.55}
-      />
+      {planets.map((planet) => (
+        <Planet
+          key={planet.label}
+          label={planet.label}
+          color={planet.color}
+          size={planet.size}
+          orbitRadius={planet.orbitRadius}
+          angle={planet.angle}
+        />
+      ))}
 
       <OrbitControls />
     </Canvas>
