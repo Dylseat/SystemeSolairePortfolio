@@ -1,5 +1,7 @@
-import { Canvas } from '@react-three/fiber'
+import { useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Stars, Text } from '@react-three/drei'
+import type { Group } from 'three'
 
 function Sun() {
   return (
@@ -29,28 +31,36 @@ type PlanetProps = {
   size: number
   orbitRadius: number
   angle: number
+  speed: number
 }
 
-function Planet({ label, color, size, orbitRadius, angle }: PlanetProps) {
-  const x = Math.cos(angle) * orbitRadius
-  const z = Math.sin(angle) * orbitRadius
+function Planet({ label, color, size, orbitRadius, angle, speed }: PlanetProps) {
+  const planetGroupRef = useRef<Group>(null)
+
+  useFrame((_, delta) => {
+    if (planetGroupRef.current) {
+      planetGroupRef.current.rotation.y += speed * delta
+    }
+  })
 
   return (
-    <group position={[x, 0, z]}>
-      <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
+    <group ref={planetGroupRef} rotation={[0, angle, 0]}>
+      <group position={[orbitRadius, 0, 0]}>
+        <mesh>
+          <sphereGeometry args={[size, 32, 32]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
 
-      <Text
-        position={[0, size + 0.35, 0]}
-        fontSize={0.22}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {label}
-      </Text>
+        <Text
+          position={[0, size + 0.35, 0]}
+          fontSize={0.22}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {label}
+        </Text>
+      </group>
     </group>
   )
 }
@@ -62,6 +72,7 @@ const planets: PlanetProps[] = [
     size: 0.35,
     orbitRadius: 3,
     angle: 0,
+    speed: 0.5,
   },
   {
     label: 'Expériences',
@@ -69,6 +80,7 @@ const planets: PlanetProps[] = [
     size: 0.45,
     orbitRadius: 4.5,
     angle: Math.PI,
+    speed: 0.3,
   },
   {
     label: 'Formation',
@@ -76,6 +88,7 @@ const planets: PlanetProps[] = [
     size: 0.4,
     orbitRadius: 6,
     angle: Math.PI / 2,
+    speed: 0.2,
   },
   {
     label: 'Mini-jeu',
@@ -83,6 +96,7 @@ const planets: PlanetProps[] = [
     size: 0.55,
     orbitRadius: 7.5,
     angle: -Math.PI / 4,
+    speed: 0.15,
   },
 ]
 
@@ -117,6 +131,7 @@ function SolarScene() {
           size={planet.size}
           orbitRadius={planet.orbitRadius}
           angle={planet.angle}
+          speed={planet.speed}
         />
       ))}
 
