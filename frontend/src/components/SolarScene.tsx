@@ -32,9 +32,10 @@ type PlanetProps = {
   orbitRadius: number
   angle: number
   speed: number
+  onClick?: () => void
 }
 
-function Planet({ label, color, size, orbitRadius, angle, speed }: PlanetProps) {
+function Planet({ label, color, size, orbitRadius, angle, speed, onClick }: PlanetProps) {
   const planetGroupRef = useRef<Group>(null)
 
   useFrame((_, delta) => {
@@ -46,7 +47,7 @@ function Planet({ label, color, size, orbitRadius, angle, speed }: PlanetProps) 
   return (
     <group ref={planetGroupRef} rotation={[0, angle, 0]}>
       <group position={[orbitRadius, 0, 0]}>
-        <mesh>
+        <mesh onClick={onClick}>
           <sphereGeometry args={[size, 32, 32]} />
           <meshStandardMaterial color={color} />
         </mesh>
@@ -133,6 +134,7 @@ function SolarScene() {
           orbitRadius={planet.orbitRadius}
           angle={planet.angle}
           speed={planet.speed}
+          onClick={() => console.log(`${planet.label} clicked`)}
         />
       ))}
 
