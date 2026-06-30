@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Stars, Text } from '@react-three/drei'
+import { Billboard, OrbitControls, Stars, Text } from '@react-three/drei'
 import type { Group } from 'three'
 
 function Sun() {
@@ -51,15 +51,16 @@ function Planet({ label, color, size, orbitRadius, angle, speed }: PlanetProps) 
           <meshStandardMaterial color={color} />
         </mesh>
 
-        <Text
-          position={[0, size + 0.35, 0]}
-          fontSize={0.22}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {label}
-        </Text>
+        <Billboard position={[0, size + 0.35, 0]}>
+          <Text
+            fontSize={0.22}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {label}
+          </Text>
+        </Billboard>
       </group>
     </group>
   )
