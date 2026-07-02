@@ -2,12 +2,29 @@ type InfoPanelProps = {
   title: string
   description: string
   items: string[]
+  imageUrl?: string
   onClose: () => void
 }
 
-function InfoPanel({ title, description, items, onClose }: InfoPanelProps) {
+function InfoPanel({
+  title,
+  description,
+  items,
+  imageUrl,
+  onClose,
+}: InfoPanelProps) {
   return (
     <div className="absolute right-6 top-6 w-80 rounded-2xl bg-black/70 p-5 text-white backdrop-blur">
+      {imageUrl && (
+      <div className="mb-4 h-32 w-32 overflow-hidden rounded-full">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="translate-y-5 -translate-x-3 h-full w-full scale-[2.5] object-cover object-top"
+        />
+      </div>
+      )}
+
       <h2 className="text-2xl font-bold">{title}</h2>
 
       <p className="mt-3 text-sm text-slate-300">

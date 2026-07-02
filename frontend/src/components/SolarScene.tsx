@@ -3,11 +3,15 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
 import InfoPanel from './InfoPanel'
 import Planet from './Planet'
-import { planets, type PlanetData } from '../data/planets'
+import {planets, sunData, type InfoPanelData} from '../data/planets'
 
-function Sun() {
+type SunProps = {
+  onClick: () => void
+}
+
+function Sun({ onClick }: SunProps) {
   return (
-    <mesh>
+    <mesh onClick={onClick}>
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial
         color="orange"
@@ -27,12 +31,8 @@ function Orbit({ radius }: { radius: number }) {
   )
 }
 
-type PlanetProps = PlanetData & {
-  onClick: () => void
-}
-
 function SolarScene() {
-    const [selectedPlanet, setSelectedPlanet] = useState<PlanetData | null>(null)
+    const [selectedSection, setSelectedSection] = useState<InfoPanelData | null>(null)
     
   return (
     <div className="relative h-full w-full">
@@ -51,7 +51,7 @@ function SolarScene() {
           speed={1}
         />
 
-        <Sun />
+        <Sun onClick={() => setSelectedSection(sunData)} />
 
         {planets.map((planet) => (
           <Orbit key={`orbit-${planet.label}`} radius={planet.orbitRadius} />
@@ -66,7 +66,7 @@ function SolarScene() {
             orbitRadius={planet.orbitRadius}
             angle={planet.angle}
             speed={planet.speed}
-            onClick={() => setSelectedPlanet(planet)}
+            onClick={() => setSelectedSection(planet)}
             description={planet.description}
             items={planet.items}
           />
@@ -75,12 +75,13 @@ function SolarScene() {
         <OrbitControls />
       </Canvas>
 
-      {selectedPlanet && (
+      {selectedSection && (
         <InfoPanel
-          title={selectedPlanet.label}
-          description={selectedPlanet.description}
-          items={selectedPlanet.items}
-          onClose={() => setSelectedPlanet(null)}
+          title={selectedSection.label}
+          description={selectedSection.description}
+          items={selectedSection.items}
+          imageUrl={selectedSection.imageUrl}
+          onClose={() => setSelectedSection(null)}
         />
       )}
     </div>

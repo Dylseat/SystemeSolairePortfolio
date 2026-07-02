@@ -1,12 +1,29 @@
-export type PlanetData = {
+export type InfoPanelData = {
   label: string
   description: string
   items: string[]
+  imageUrl?: string
+}
+
+export type PlanetData = InfoPanelData & {
   color: string
   size: number
   orbitRadius: number
   angle: number
   speed: number
+}
+
+export const sunData: InfoPanelData = {
+  label: 'Présentation',
+  description:
+    'Je suis développeur d’applications, intéressé par le développement web, les interfaces interactives et les projets créatifs.',
+  items: [
+    'Développeur d’applications',
+    'Intérêt pour React, TypeScript et la 3D web',
+    'Passionné par les projets interactifs',
+    'Portfolio sous forme de système solaire',
+  ],
+  imageUrl: '/images/Profile.jpg',
 }
 
 export const planets: PlanetData[] = [
