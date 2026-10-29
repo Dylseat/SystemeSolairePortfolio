@@ -1,4 +1,5 @@
 export type InfoPanelData = {
+  id: string
   label: string
   description: string
   items: string[]
@@ -14,6 +15,7 @@ export type PlanetData = InfoPanelData & {
 }
 
 export const sunData: InfoPanelData = {
+  id: 'presentation',
   label: 'Présentation',
   description:
     'Je suis développeur d’applications, intéressé par le développement web, les interfaces interactives et les projets créatifs.',
@@ -28,6 +30,7 @@ export const sunData: InfoPanelData = {
 
 export const planets: PlanetData[] = [
   {
+    id: 'competences',
     label: 'Compétences',
     description: 'Mes compétences principales en développement web et logiciel.',
     items: ['React', 'TypeScript', 'C#', '.NET', 'Git', 'Azure DevOps'],
@@ -38,6 +41,7 @@ export const planets: PlanetData[] = [
     speed: 0.5,
   },
   {
+    id: 'experiences',
     label: 'Expériences',
     description: 'Mes expériences professionnelles et projets réalisés en entreprise.',
     items: ['Développement .NET', 'Tests unitaires', 'CI/CD', 'Ticketing', 'Documentation'],
@@ -48,6 +52,7 @@ export const planets: PlanetData[] = [
     speed: 0.3,
   },
   {
+    id: 'formation',
     label: 'Formation',
     description: 'Mon parcours de formation dans le développement d’applications.',
     items: ['CFC informaticien', 'Développement d’applications', 'Projets scolaires', 'Autoformation'],
@@ -58,6 +63,7 @@ export const planets: PlanetData[] = [
     speed: 0.2,
   },
   {
+    id: 'mini-jeu',
     label: 'Mini-jeu',
     description: 'Un mini-jeu inspiré de Space Invaders avec un système de score.',
     items: ['Gameplay arcade', 'Scoreboard', 'Classement', 'Sauvegarde des scores'],
@@ -68,3 +74,5 @@ export const planets: PlanetData[] = [
     speed: 0.15,
   },
 ]
+
+export const sections: InfoPanelData[] = [sunData, ...planets]

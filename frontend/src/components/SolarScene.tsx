@@ -1,39 +1,35 @@
-import { useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { Stars } from '@react-three/drei'
+import CameraRig from './CameraRig'
 import InfoPanel from './InfoPanel'
+import Orbit from './Orbit'
 import Planet from './Planet'
-import {planets, sunData, type InfoPanelData} from '../data/planets'
-
-type SunProps = {
-  onClick: () => void
-}
-
-function Sun({ onClick }: SunProps) {
-  return (
-    <mesh onClick={onClick}>
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshStandardMaterial
-        color="orange"
-        emissive="orange"
-        emissiveIntensity={1.5}
-      />
-    </mesh>
-  )
-}
-
-function Orbit({ radius }: { radius: number }) {
-  return (
-    <mesh rotation={[Math.PI / 2, 0, 0]}>
-      <torusGeometry args={[radius, 0.01, 16, 120]} />
-      <meshBasicMaterial color="#334155" />
-    </mesh>
-  )
-}
+import SectionMenu from './SectionMenu'
+import StartHint from './StartHint'
+import Sun from './Sun'
+import { planets, sections, sunData } from '../data/planets'
 
 function SolarScene() {
-    const [selectedSection, setSelectedSection] = useState<InfoPanelData | null>(null)
-    
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [hasSelected, setHasSelected] = useState(false)
+
+  const selectedSection = sections.find((section) => section.id === selectedId)
+
+  const select = (id: string) => {
+    setSelectedId(id)
+    setHasSelected(true)
+  }
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedId(null)
+    }
+
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [])
+
   return (
     <div className="relative h-full w-full">
       <Canvas camera={{ position: [0, 4, 10], fov: 60 }}>
@@ -51,29 +47,46 @@ function SolarScene() {
           speed={1}
         />
 
-        <Sun onClick={() => setSelectedSection(sunData)} />
+        <Sun
+          name={sunData.id}
+          isSelected={selectedId === sunData.id}
+          onClick={() => select(sunData.id)}
+        />
 
         {planets.map((planet) => (
-          <Orbit key={`orbit-${planet.label}`} radius={planet.orbitRadius} />
+          <Orbit key={`orbit-${planet.id}`} radius={planet.orbitRadius} />
         ))}
 
-        {planets.map((planet) => (
-          <Planet
-            key={planet.label}
-            label={planet.label}
-            color={planet.color}
-            size={planet.size}
-            orbitRadius={planet.orbitRadius}
-            angle={planet.angle}
-            speed={planet.speed}
-            onClick={() => setSelectedSection(planet)}
-            description={planet.description}
-            items={planet.items}
-          />
-        ))}
+        {/* Les noms des planètes chargent une police : ce Suspense évite
+            que ce chargement ne remonte hors du Canvas et ne réinitialise WebGL */}
+        <Suspense fallback={null}>
+          {planets.map((planet) => (
+            <Planet
+              key={planet.id}
+              id={planet.id}
+              label={planet.label}
+              color={planet.color}
+              size={planet.size}
+              orbitRadius={planet.orbitRadius}
+              angle={planet.angle}
+              speed={planet.speed}
+              isSelected={selectedId === planet.id}
+              paused={selectedId !== null}
+              onClick={() => select(planet.id)}
+            />
+          ))}
+        </Suspense>
 
-        <OrbitControls />
+        <CameraRig selectedId={selectedId} />
       </Canvas>
+
+      <SectionMenu
+        sections={sections}
+        selectedId={selectedId}
+        onSelect={select}
+      />
+
+      {!hasSelected && <StartHint />}
 
       {selectedSection && (
         <InfoPanel
@@ -81,7 +94,7 @@ function SolarScene() {
           description={selectedSection.description}
           items={selectedSection.items}
           imageUrl={selectedSection.imageUrl}
-          onClose={() => setSelectedSection(null)}
+          onClose={() => setSelectedId(null)}
         />
       )}
     </div>
