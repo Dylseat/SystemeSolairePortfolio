@@ -1,27 +1,38 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Billboard, Text } from '@react-three/drei'
+import { Billboard, Text, useCursor } from '@react-three/drei'
 import type { Group } from 'three'
 import type { PlanetData } from '../data/planets'
 
-type PlanetProps = PlanetData & {
+type PlanetProps = Pick<
+  PlanetData,
+  'id' | 'label' | 'color' | 'size' | 'orbitRadius' | 'angle' | 'speed'
+> & {
+  isSelected: boolean
+  paused: boolean
   onClick: () => void
 }
 
 function Planet({
+  id,
   label,
   color,
   size,
   orbitRadius,
   angle,
   speed,
+  isSelected,
+  paused,
   onClick,
-
 }: PlanetProps) {
   const planetGroupRef = useRef<Group>(null)
+  const [hovered, setHovered] = useState(false)
+  const isHighlighted = hovered || isSelected
+
+  useCursor(hovered)
 
   useFrame((_, delta) => {
-    if (planetGroupRef.current) {
+    if (planetGroupRef.current && !paused) {
       planetGroupRef.current.rotation.y += speed * delta
     }
   })
@@ -29,14 +40,30 @@ function Planet({
   return (
     <group ref={planetGroupRef} rotation={[0, angle, 0]}>
       <group position={[orbitRadius, 0, 0]}>
-        <mesh onClick={onClick}>
+        <mesh
+          name={id}
+          scale={isHighlighted ? 1.15 : 1}
+          onClick={(event) => {
+            event.stopPropagation()
+            onClick()
+          }}
+          onPointerOver={(event) => {
+            event.stopPropagation()
+            setHovered(true)
+          }}
+          onPointerOut={() => setHovered(false)}
+        >
           <sphereGeometry args={[size, 32, 32]} />
-          <meshStandardMaterial color={color} />
+          <meshStandardMaterial
+            color={color}
+            emissive={color}
+            emissiveIntensity={isHighlighted ? 0.5 : 0}
+          />
         </mesh>
 
         <Billboard position={[0, size + 0.35, 0]}>
           <Text
-            fontSize={0.22}
+            fontSize={isHighlighted ? 0.28 : 0.22}
             color="white"
             anchorX="center"
             anchorY="middle"
