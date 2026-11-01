@@ -1,3 +1,5 @@
+import ProfilePhoto from './ProfilePhoto'
+
 type InfoPanelProps = {
   title: string
   description: string
@@ -14,15 +16,12 @@ function InfoPanel({
   onClose,
 }: InfoPanelProps) {
   return (
-    <div className="absolute right-6 top-6 w-80 rounded-2xl bg-black/70 p-5 text-white backdrop-blur">
+    // Sur mobile : tiroir en bas de l'écran. Sur grand écran : panneau en haut à droite
+    <div className="absolute inset-x-0 bottom-0 max-h-[55%] overflow-y-auto rounded-t-2xl bg-black/80 p-5 text-white backdrop-blur md:inset-x-auto md:bottom-auto md:right-6 md:top-6 md:max-h-[calc(100%-3rem)] md:w-80 md:rounded-2xl md:bg-black/70">
       {imageUrl && (
-      <div className="mb-4 h-32 w-32 overflow-hidden rounded-full">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="translate-y-5 -translate-x-3 h-full w-full scale-[2.5] object-cover object-top"
-        />
-      </div>
+        <div className="mb-4">
+          <ProfilePhoto src={imageUrl} alt={title} />
+        </div>
       )}
 
       <h2 className="text-2xl font-bold">{title}</h2>
