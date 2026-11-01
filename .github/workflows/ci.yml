@@ -125,21 +125,15 @@ jobs:
       - name: Build de production
         run: npm run build
 
-      - name: Configurer la clé SSH
-        env:
-          SSH_KEY: ${{ secrets.INFOMANIAK_SSH_KEY }}
-          HOST: ${{ vars.INFOMANIAK_HOST }}
-        run: |
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
-
-      - name: Envoyer le site
-        env:
-          HOST: ${{ vars.INFOMANIAK_HOST }}
-          USER: ${{ vars.INFOMANIAK_USER }}
-          TARGET: ${{ vars.INFOMANIAK_PATH }}
-        # --delete retire du serveur les anciens fichiers du build précédent :
-        # INFOMANIAK_PATH doit être le dossier du site uniquement
-        run: rsync -az --delete dist/ "$USER@$HOST:$TARGET/"
+      # Hébergement Starter : FTP uniquement (passer à rsync par SSH avec l'Hébergement Web)
+      - name: Envoyer le site (FTPS)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ vars.INFOMANIAK_HOST }}
+          username: ${{ vars.INFOMANIAK_USER }}
+          password: ${{ secrets.INFOMANIAK_FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: frontend/dist/
+          # Doit se terminer par « / ». Les fichiers retirés du build sont supprimés
+          # du serveur (suivi dans .ftp-deploy-sync-state.json)
+          server-dir: ${{ vars.INFOMANIAK_PATH }}
