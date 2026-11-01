@@ -37,13 +37,13 @@ Tout le contenu du CV se trouve dans [`frontend/src/data/planets.ts`](frontend/s
 
 ## Déploiement
 
-Le site est hébergé chez Infomaniak. À chaque fusion sur `main`, la CI vérifie le code (lint, build, tests unitaires et end-to-end), puis le job « Déploiement Infomaniak » envoie le build `dist/` sur le serveur en FTPS (hébergement Starter, sans SSH).
+Le site est hébergé chez Infomaniak. À chaque fusion sur `main`, la CI vérifie le code (lint, build, tests unitaires et end-to-end), puis le job « Déploiement Infomaniak » envoie le build `dist/` sur le serveur en FTP. L'hébergement Starter n'accepte que le FTP non chiffré : le compte FTP est dédié au déploiement, et le passage à l'Hébergement Web permettra d'utiliser SFTP.
 
 Configuration dans GitHub, *Settings → Secrets and variables → Actions* :
 
 | Nom | Type | Contenu |
 | --- | --- | --- |
-| `INFOMANIAK_FTP_PASSWORD` | Secret | Mot de passe de l'utilisateur FTP |
+| `INFOMANIAK_FTP_PASSWORD` | Secret | Mot de passe du compte FTP de déploiement |
 | `INFOMANIAK_HOST` | Variable | Serveur FTP de l'hébergement |
 | `INFOMANIAK_USER` | Variable | Utilisateur FTP |
 | `INFOMANIAK_PATH` | Variable | Dossier du site sur le serveur, terminé par `/` (les fichiers retirés du build y sont supprimés) |
