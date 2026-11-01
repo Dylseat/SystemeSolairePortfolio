@@ -9,10 +9,17 @@ import SectionMenu from './SectionMenu'
 import StartHint from './StartHint'
 import Sun from './Sun'
 import { planets, sections, sunData } from '../data/planets'
+import { useIsSmallScreen, usePrefersReducedMotion } from '../hooks/useMediaQuery'
 
-function SolarScene() {
+type SolarSceneProps = {
+  onOpenTextView: () => void
+}
+
+function SolarScene({ onOpenTextView }: SolarSceneProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [hasSelected, setHasSelected] = useState(false)
+  const isSmallScreen = useIsSmallScreen()
+  const reducedMotion = usePrefersReducedMotion()
 
   const selectedSection = sections.find((section) => section.id === selectedId)
 
@@ -32,7 +39,10 @@ function SolarScene() {
 
   return (
     <div className="relative h-full w-full">
-      <Canvas camera={{ position: [0, 4, 10], fov: 60 }}>
+      <Canvas
+        camera={{ position: isSmallScreen ? [0, 9, 16] : [0, 4, 10], fov: 60 }}
+        dpr={isSmallScreen ? [1, 1.5] : [1, 2]}
+      >
         <color attach="background" args={['#020617']} />
 
         <ambientLight intensity={0.5} />
@@ -41,10 +51,10 @@ function SolarScene() {
         <Stars
           radius={100}
           depth={50}
-          count={4000}
+          count={isSmallScreen ? 1500 : 4000}
           factor={4}
           fade
-          speed={1}
+          speed={reducedMotion ? 0 : 1}
         />
 
         <Sun
@@ -71,19 +81,24 @@ function SolarScene() {
               angle={planet.angle}
               speed={planet.speed}
               isSelected={selectedId === planet.id}
-              paused={selectedId !== null}
+              paused={selectedId !== null || reducedMotion}
               onClick={() => select(planet.id)}
             />
           ))}
         </Suspense>
 
-        <CameraRig selectedId={selectedId} />
+        <CameraRig
+          selectedId={selectedId}
+          isSmallScreen={isSmallScreen}
+          reducedMotion={reducedMotion}
+        />
       </Canvas>
 
       <SectionMenu
         sections={sections}
         selectedId={selectedId}
         onSelect={select}
+        onOpenTextView={onOpenTextView}
       />
 
       {!hasSelected && <StartHint />}

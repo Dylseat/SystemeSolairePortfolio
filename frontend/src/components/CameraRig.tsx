@@ -4,14 +4,17 @@ import { CameraControls } from '@react-three/drei'
 import { Box3, Sphere, Vector3 } from 'three'
 
 const OVERVIEW_POSITION = new Vector3(0, 4, 10)
+const OVERVIEW_POSITION_SMALL_SCREEN = new Vector3(0, 9, 16)
 const OVERVIEW_TARGET = new Vector3(0, 0, 0)
 
 type CameraRigProps = {
   selectedId: string | null
+  isSmallScreen: boolean
+  reducedMotion: boolean
 }
 
 // Les astres sont retrouvés dans la scène grâce à leur `name`, égal à l'id de la section
-function CameraRig({ selectedId }: CameraRigProps) {
+function CameraRig({ selectedId, isSmallScreen, reducedMotion }: CameraRigProps) {
   const controlsRef = useRef<CameraControls>(null)
   const scene = useThree((state) => state.scene)
 
@@ -19,14 +22,18 @@ function CameraRig({ selectedId }: CameraRigProps) {
     const controls = controlsRef.current
     if (!controls) return
 
+    const animate = !reducedMotion
     const body = selectedId ? scene.getObjectByName(selectedId) : undefined
 
     if (!body) {
-      controls.setFocalOffset(0, 0, 0, true)
+      const overviewPosition = isSmallScreen
+        ? OVERVIEW_POSITION_SMALL_SCREEN
+        : OVERVIEW_POSITION
+      controls.setFocalOffset(0, 0, 0, animate)
       controls.setLookAt(
-        ...OVERVIEW_POSITION.toArray(),
+        ...overviewPosition.toArray(),
         ...OVERVIEW_TARGET.toArray(),
-        true,
+        animate,
       )
       return
     }
@@ -35,7 +42,8 @@ function CameraRig({ selectedId }: CameraRigProps) {
     const radius = new Box3()
       .setFromObject(body)
       .getBoundingSphere(new Sphere()).radius
-    const distance = radius * 6
+    // Sur mobile, le panneau ne laisse que le haut de l'écran : prendre plus de recul
+    const distance = radius * (isSmallScreen ? 10 : 6)
 
     // Se placer sur le côté de la planète, un peu vers le Soleil, pour voir
     // sa face éclairée sans que le Soleil ne bouche la vue
@@ -50,11 +58,15 @@ function CameraRig({ selectedId }: CameraRigProps) {
       .addScaledVector(towardSun, distance * 0.4)
       .add(new Vector3(0, distance * 0.3, 0))
 
-    // Décaler l'astre vers la gauche pour qu'il ne soit pas caché par le panneau
-    const isWideScreen = window.innerWidth >= 768
-    controls.setFocalOffset(isWideScreen ? radius * 1.5 : 0, 0, 0, true)
-    controls.setLookAt(...position.toArray(), ...target.toArray(), true)
-  }, [scene, selectedId])
+    // Décaler l'astre pour qu'il ne soit pas caché par le panneau :
+    // vers la gauche sur grand écran, vers le haut sur mobile (panneau en bas)
+    if (isSmallScreen) {
+      controls.setFocalOffset(0, radius * 3, 0, animate)
+    } else {
+      controls.setFocalOffset(radius * 1.5, 0, 0, animate)
+    }
+    controls.setLookAt(...position.toArray(), ...target.toArray(), animate)
+  }, [scene, selectedId, isSmallScreen, reducedMotion])
 
   return (
     <CameraControls
