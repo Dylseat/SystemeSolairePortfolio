@@ -1,0 +1,15 @@
+# Configuration Apache de l'hébergement Infomaniak, déployée avec le site.
+# Une seule adresse officielle : https://dylandiaz.ch (sans www), comme
+# l'adresse canonique déclarée dans index.html.
+
+RewriteEngine On
+
+# HTTP → HTTPS. Le second test évite une boucle de redirection si le
+# serveur est derrière un proxy qui gère lui-même le HTTPS.
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://dylandiaz.ch%{REQUEST_URI} [L,R=301]
+
+# www.dylandiaz.ch → dylandiaz.ch
+RewriteCond %{HTTP_HOST} ^www\.dylandiaz\.ch$ [NC]
+RewriteRule ^ https://dylandiaz.ch%{REQUEST_URI} [L,R=301]
