@@ -9,6 +9,7 @@ type PlanetProps = Pick<
   'id' | 'label' | 'color' | 'size' | 'orbitRadius' | 'angle' | 'speed'
 > & {
   isSelected: boolean
+  showLabel: boolean
   paused: boolean
   onClick: () => void
 }
@@ -22,6 +23,7 @@ function Planet({
   angle,
   speed,
   isSelected,
+  showLabel,
   paused,
   onClick,
 }: PlanetProps) {
@@ -61,7 +63,7 @@ function Planet({
           />
         </mesh>
 
-        <Billboard position={[0, size + 0.35, 0]}>
+        <Billboard position={[0, size + 0.35, 0]} visible={showLabel}>
           <Text
             fontSize={isHighlighted ? 0.28 : 0.22}
             color="white"

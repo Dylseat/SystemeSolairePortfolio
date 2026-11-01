@@ -16,7 +16,7 @@ function SectionMenu({
   return (
     <nav
       aria-label="Sections du portfolio"
-      className="absolute inset-x-0 top-0 flex gap-2 overflow-x-auto [scrollbar-width:none] px-4 py-4 md:inset-x-auto md:left-6 md:top-6 md:max-w-[calc(100%-25rem)] md:flex-wrap md:p-0"
+      className="absolute inset-x-0 top-0 flex gap-2 overflow-x-auto [scrollbar-width:none] px-4 py-4 md:inset-x-auto md:left-6 md:top-6 md:max-w-[calc(100%-28rem)] md:flex-wrap md:p-0"
     >
       {sections.map((section) => {
         const isActive = section.id === selectedId

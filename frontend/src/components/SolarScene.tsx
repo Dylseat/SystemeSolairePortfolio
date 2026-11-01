@@ -8,7 +8,7 @@ import Planet from './Planet'
 import SectionMenu from './SectionMenu'
 import StartHint from './StartHint'
 import Sun from './Sun'
-import { planets, sections, sunData } from '../data/planets'
+import { moonData, planets, sections, sunData } from '../data/planets'
 import { useIsSmallScreen, usePrefersReducedMotion } from '../hooks/useMediaQuery'
 
 type SolarSceneProps = {
@@ -81,10 +81,29 @@ function SolarScene({ onOpenTextView }: SolarSceneProps) {
               angle={planet.angle}
               speed={planet.speed}
               isSelected={selectedId === planet.id}
+              showLabel={selectedId === null || selectedId === planet.id}
               paused={selectedId !== null || reducedMotion}
               onClick={() => select(planet.id)}
             />
           ))}
+
+          {/* La Lune tourne autour du Soleil sur une orbite inclinée */}
+          <group rotation={[moonData.inclination, 0, 0]}>
+            <Orbit radius={moonData.orbitRadius} />
+            <Planet
+              id={moonData.id}
+              label={moonData.label}
+              color={moonData.color}
+              size={moonData.size}
+              orbitRadius={moonData.orbitRadius}
+              angle={moonData.angle}
+              speed={moonData.speed}
+              isSelected={selectedId === moonData.id}
+              showLabel={selectedId === null || selectedId === moonData.id}
+              paused={selectedId !== null || reducedMotion}
+              onClick={() => select(moonData.id)}
+            />
+          </group>
         </Suspense>
 
         <CameraRig
@@ -105,10 +124,7 @@ function SolarScene({ onOpenTextView }: SolarSceneProps) {
 
       {selectedSection && (
         <InfoPanel
-          title={selectedSection.label}
-          description={selectedSection.description}
-          items={selectedSection.items}
-          imageUrl={selectedSection.imageUrl}
+          section={selectedSection}
           onClose={() => setSelectedId(null)}
         />
       )}
