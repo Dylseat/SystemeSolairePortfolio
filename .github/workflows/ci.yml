@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: read
-  # Pour publier le rapport de tests sur le commit / la pull request
-  checks: write
 
 jobs:
   check:
@@ -39,15 +37,10 @@ jobs:
       - name: Tests unitaires et fonctionnels
         run: npm test
 
+      # Résumé en français dans l'onglet « Summary » du run
       - name: Rapport des tests unitaires
         if: ${{ !cancelled() }}
-        uses: dorny/test-reporter@v2
-        with:
-          name: Rapport — tests unitaires et fonctionnels
-          path: frontend/test-reports/unit-junit.xml
-          reporter: java-junit
-          use-actions-summary: 'true'
-          fail-on-empty: 'false'
+        run: node scripts/test-summary.mjs "Tests unitaires et fonctionnels" test-reports/unit-junit.xml >> "$GITHUB_STEP_SUMMARY"
 
   e2e:
     name: Tests end-to-end
@@ -77,13 +70,7 @@ jobs:
 
       - name: Rapport des tests end-to-end
         if: ${{ !cancelled() }}
-        uses: dorny/test-reporter@v2
-        with:
-          name: Rapport — tests end-to-end
-          path: frontend/test-reports/e2e-junit.xml
-          reporter: java-junit
-          use-actions-summary: 'true'
-          fail-on-empty: 'false'
+        run: node scripts/test-summary.mjs "Tests end-to-end (bureau et mobile)" test-reports/e2e-junit.xml >> "$GITHUB_STEP_SUMMARY"
 
       - name: Rapport Playwright détaillé (captures, traces)
         if: ${{ !cancelled() }}
