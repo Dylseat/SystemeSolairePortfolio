@@ -83,7 +83,6 @@ Lancés sur deux appareils : **bureau** (Chrome) et **mobile** (Pixel 7).
 
 ## Rapports dans GitHub Actions
 
-- **Résumé du job** : un tableau des tests réussis et échoués pour chaque niveau (onglet *Summary* du run).
-- **Checks** : un rapport par niveau, visible sur le commit et dans la pull request.
+- **Résumé du job** : pour chaque niveau, un tableau en français (réussis, échecs, erreurs, ignorés, durée), le détail des échecs et la liste de tous les tests, dans l'onglet *Summary* du run. Il est généré par [`frontend/scripts/test-summary.mjs`](frontend/scripts/test-summary.mjs) à partir des rapports JUnit.
 - **Annotations** : un test qui échoue est signalé directement sur la ligne concernée.
 - **Artefact `rapport-playwright`** : le rapport HTML complet des tests end-to-end, avec captures d'écran et traces des échecs (à télécharger depuis la page du run).
