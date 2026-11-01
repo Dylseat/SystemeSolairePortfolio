@@ -9,9 +9,6 @@ dist/
 .env.*.local
 .env.local
 
-# Vercel
-.vercel/
-
 # Logs
 *.log
 
