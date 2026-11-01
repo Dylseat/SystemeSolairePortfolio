@@ -49,6 +49,16 @@ describe('InfoPanel', () => {
     )
   })
 
+  it('signale une section en construction seulement quand elle l’est', () => {
+    const { rerender } = render(<InfoPanel section={section} onClose={() => {}} />)
+    expect(screen.queryByText('En construction')).not.toBeInTheDocument()
+    expect(screen.queryByText('Fonctionnalités prévues')).not.toBeInTheDocument()
+
+    rerender(<InfoPanel section={{ ...section, inProgress: true }} onClose={() => {}} />)
+    expect(screen.getByText('En construction')).toBeInTheDocument()
+    expect(screen.getByText('Fonctionnalités prévues')).toBeInTheDocument()
+  })
+
   it('appelle onClose au clic sur « Fermer »', async () => {
     const onClose = vi.fn()
     render(<InfoPanel section={section} onClose={onClose} />)

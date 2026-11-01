@@ -36,6 +36,11 @@ describe('données du portfolio', () => {
     }
   })
 
+  it('signale que le mini-jeu est en construction', () => {
+    const miniGame = planets.find((planet) => planet.id === 'mini-jeu')
+    expect(miniGame?.inProgress).toBe(true)
+  })
+
   it("n'utilise que des liens https ou mailto", () => {
     for (const link of sections.flatMap((section) => section.links ?? [])) {
       expect(link.href).toMatch(/^(https:\/\/|mailto:)/)
