@@ -50,3 +50,5 @@ Configuration dans GitHub, *Settings → Secrets and variables → Actions* :
 | `SITE_URL` | Variable | Adresse publique du site |
 
 Tant que `INFOMANIAK_HOST` n'est pas définie, le déploiement est ignoré.
+
+Le fichier [`frontend/public/.htaccess`](frontend/public/.htaccess) est déployé avec le site : il redirige `http://` et `www.` vers `https://dylandiaz.ch`.
