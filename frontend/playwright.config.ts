@@ -32,7 +32,7 @@ export default defineConfig({
     { name: 'bureau', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
-  // Teste le build de production, comme sur Vercel
+  // Teste le build de production, celui qui est déployé
   webServer: {
     command: `npx vite build && npx vite preview --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
