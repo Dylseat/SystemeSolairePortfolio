@@ -1,5 +1,7 @@
 # Portfolio — Système solaire
 
+[![Tests](https://github.com/blacknat32/TTS-monster-for-OBS/actions/workflows/tests.yml/badge.svg)](https://github.com/blacknat32/TTS-monster-for-OBS/actions/workflows/tests.yml)
+
 Mon CV sous forme de système solaire en 3D : chaque astre est une section du portfolio (présentation, compétences, expériences, formation, contact). Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`.
 
 ## Stack
