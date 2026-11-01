@@ -19,6 +19,8 @@ export type InfoPanelData = {
   entries?: Entry[]
   links?: Link[]
   imageUrl?: string
+  // Section pas encore terminée : affiche un badge « En construction »
+  inProgress?: boolean
 }
 
 export type PlanetData = InfoPanelData & {
@@ -145,8 +147,10 @@ export const planets: PlanetData[] = [
   {
     id: 'mini-jeu',
     label: 'Mini-jeu',
-    description: 'Un mini-jeu inspiré de Space Invaders avec un système de score.',
+    description:
+      'Bientôt disponible : un mini-jeu inspiré de Space Invaders avec un système de score.',
     items: ['Gameplay arcade', 'Scoreboard', 'Classement', 'Sauvegarde des scores'],
+    inProgress: true,
     color: '#f97316',
     size: 0.55,
     orbitRadius: 7.5,

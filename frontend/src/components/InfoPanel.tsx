@@ -9,7 +9,7 @@ type InfoPanelProps = {
 }
 
 function InfoPanel({ section, onClose }: InfoPanelProps) {
-  const { label, description, items, entries, links, imageUrl } = section
+  const { label, description, items, entries, links, imageUrl, inProgress } = section
 
   return (
     // Sur mobile : tiroir en bas de l'écran. Sur grand écran : panneau en haut à droite
@@ -22,14 +22,26 @@ function InfoPanel({ section, onClose }: InfoPanelProps) {
 
       <h2 className="text-2xl font-bold">{label}</h2>
 
+      {inProgress && (
+        <p className="mt-2 inline-block rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-300">
+          <span aria-hidden="true">🚧 </span>En construction
+        </p>
+      )}
+
       {description && (
         <p className="mt-3 text-sm text-slate-300">
           {description}
         </p>
       )}
 
+      {items && inProgress && (
+        <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Fonctionnalités prévues
+        </h3>
+      )}
+
       {items && (
-        <ul className="mt-4 space-y-2 text-sm">
+        <ul className={`${inProgress ? 'mt-2' : 'mt-4'} space-y-2 text-sm`}>
           {items.map((item) => (
             <li
               key={item}
