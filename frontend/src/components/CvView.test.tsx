@@ -47,6 +47,17 @@ describe('CvView', () => {
     expect(print).toHaveBeenCalledOnce()
   })
 
+  it('compte les impressions dans les statistiques', async () => {
+    vi.spyOn(window, 'print').mockImplementation(() => {})
+    const count = vi.fn()
+    vi.stubGlobal('goatcounter', { count })
+    render(<CvView />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Imprimer/ }))
+    expect(count).toHaveBeenCalledWith(expect.objectContaining({ path: 'imprimer-cv', event: true }))
+    vi.unstubAllGlobals()
+  })
+
   it('propose de revenir au système solaire quand la 3D est disponible', async () => {
     const onClose = vi.fn()
     render(<CvView onClose={onClose} />)

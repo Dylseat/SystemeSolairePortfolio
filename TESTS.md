@@ -32,6 +32,7 @@ npm run test:e2e      # end-to-end (la première fois : npx playwright install c
 | La photo de profil existe | Pas d'image cassée dans le panneau et la version texte |
 | Les orbites des planètes ne se chevauchent pas | Deux planètes ne peuvent pas se traverser en tournant |
 | La Lune tourne entre le Soleil et la première planète | Elle ne traverse ni le Soleil ni une planète |
+| Le mini-jeu est signalé « en construction » | Le visiteur sait que le jeu n'est pas encore jouable |
 
 ### Hook — `src/hooks/useMediaQuery.test.ts`
 
@@ -42,15 +43,23 @@ npm run test:e2e      # end-to-end (la première fois : npx playwright install c
 | Se met à jour quand l'écran change | Rotation du téléphone, fenêtre redimensionnée |
 | Arrête d'écouter au démontage | Pas de fuite mémoire |
 
+### Statistiques — `src/analytics.test.ts`
+
+| Test | Pourquoi |
+| --- | --- |
+| Un événement est envoyé à GoatCounter | Les clics comptés apparaissent dans le tableau de bord |
+| Rien ne se passe si GoatCounter est absent ou bloqué | Le site fonctionne avec un bloqueur de pub (Brave…) et pendant les tests |
+| Une erreur de GoatCounter ne fait pas planter le site | Une statistique perdue n'est pas grave |
+
 ### Composants
 
 | Fichier | Tests | Pourquoi |
 | --- | --- | --- |
-| `LinkList.test.tsx` | Un lien par entrée ; liens externes dans un nouvel onglet (`noreferrer`) ; email dans le même onglet ; adresse en clair pour l'impression | Le visiteur ne quitte pas le portfolio ; le PDF imprimé reste utile |
+| `LinkList.test.tsx` | Un lien par entrée ; liens externes dans un nouvel onglet (`noreferrer`) ; email dans le même onglet ; adresse en clair pour l'impression ; clic compté dans les statistiques | Le visiteur ne quitte pas le portfolio ; le PDF imprimé reste utile |
 | `EntryList.test.tsx` | Titre, lieu et période ; détails affichés quand ils existent ; pas de liste vide ; ordre respecté | Lisibilité des expériences et formations |
-| `InfoPanel.test.tsx` | Tout le contenu affiché ; fonctionne sans description ; photo seulement si présente ; bouton « Fermer » | Le panneau s'adapte à chaque section |
+| `InfoPanel.test.tsx` | Tout le contenu affiché ; fonctionne sans description ; photo seulement si présente ; badge « En construction » seulement si besoin ; bouton « Fermer » | Le panneau s'adapte à chaque section |
 | `SectionMenu.test.tsx` | Un bouton par section + « Version texte » ; section active signalée (`aria-current`) ; bon id transmis | Navigation et accessibilité (lecteurs d'écran) |
-| `CvView.test.tsx` | Nom et titre ; toutes les sections sauf le mini-jeu ; liens de contact ; impression ; bouton retour seulement si la 3D est disponible | La version texte est ce que lit un recruteur pressé |
+| `CvView.test.tsx` | Nom et titre ; toutes les sections sauf le mini-jeu ; liens de contact ; impression (comptée dans les statistiques) ; bouton retour seulement si la 3D est disponible | La version texte est ce que lit un recruteur pressé |
 | `StartHint.test.tsx` | Texte d'aide ; ne bloque pas les clics ; écran de chargement annoncé aux lecteurs d'écran | Accessibilité |
 
 ## Tests fonctionnels — `src/App.test.tsx`
@@ -65,6 +74,7 @@ La scène 3D est remplacée par un faux composant, car jsdom n'a pas WebGL.
 | « Retour » revient à la 3D et retire `#cv` | Aller-retour sans recharger |
 | Arriver avec `#cv` ouvre le CV | Le lien envoyé à un recruteur fonctionne |
 | Changer `#cv` dans l'adresse suit l'affichage | Navigation cohérente |
+| Les ouvertures de la version texte sont comptées, depuis le menu et par un lien `#cv` | Savoir si les recruteurs utilisent la version texte |
 
 ## Tests end-to-end — `e2e/portfolio.spec.ts`
 
@@ -80,6 +90,7 @@ Lancés sur deux appareils : **bureau** (Chrome) et **mobile** (Pixel 7).
 | Le lien `#cv` ouvre directement la version texte, sans le mini-jeu | Lien partageable |
 | Sur mobile, le menu tient sur une ligne et le panneau s'ouvre en bas | Mise en page mobile |
 | Avec « réduire les animations », les animations sont coupées | Accessibilité |
+| Chaque ouverture de section est comptée une fois dans les statistiques | Savoir quelles sections intéressent les visiteurs, sans compter deux fois la même |
 
 ## Rapports dans GitHub Actions
 

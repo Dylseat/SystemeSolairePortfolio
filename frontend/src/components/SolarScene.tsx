@@ -8,6 +8,7 @@ import Planet from './Planet'
 import SectionMenu from './SectionMenu'
 import StartHint from './StartHint'
 import Sun from './Sun'
+import { trackEvent } from '../analytics'
 import { moonData, planets, sections, sunData } from '../data/planets'
 import { useIsSmallScreen, usePrefersReducedMotion } from '../hooks/useMediaQuery'
 
@@ -24,6 +25,10 @@ function SolarScene({ onOpenTextView }: SolarSceneProps) {
   const selectedSection = sections.find((section) => section.id === selectedId)
 
   const select = (id: string) => {
+    if (id !== selectedId) {
+      const label = sections.find((section) => section.id === id)?.label
+      trackEvent(`section/${id}`, `Section : ${label}`)
+    }
     setSelectedId(id)
     setHasSelected(true)
   }

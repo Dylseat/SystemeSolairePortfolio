@@ -29,6 +29,7 @@ describe('App', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   it('affiche directement la version texte quand WebGL est indisponible', async () => {
@@ -71,6 +72,20 @@ describe('App', () => {
     await renderApp({ webgl: true })
 
     expect(cvHeading()).toBeInTheDocument()
+  })
+
+  it('compte les ouvertures de la version texte, depuis le menu ou par un lien #cv', async () => {
+    const count = vi.fn()
+    vi.stubGlobal('goatcounter', { count })
+
+    await renderApp({ webgl: true })
+    await userEvent.click(await screen.findByRole('button', { name: 'Version texte' }))
+    expect(count).toHaveBeenCalledWith(expect.objectContaining({ path: 'version-texte' }))
+
+    count.mockClear()
+    history.replaceState(null, '', '/#cv')
+    await renderApp({ webgl: true })
+    expect(count).toHaveBeenCalledWith(expect.objectContaining({ path: 'version-texte/lien-cv' }))
   })
 
   it('suit les changements de #cv faits dans l’adresse', async () => {
