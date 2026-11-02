@@ -1,3 +1,4 @@
+import { trackEvent } from '../analytics'
 import type { Link } from '../data/planets'
 
 type LinkListProps = {
@@ -16,6 +17,7 @@ function LinkList({ links }: LinkListProps) {
               href={link.href}
               target={isExternal ? '_blank' : undefined}
               rel={isExternal ? 'noreferrer' : undefined}
+              onClick={() => trackEvent(`lien/${link.label.toLowerCase()}`, `Lien : ${link.label}`)}
               className="inline-block rounded-full bg-white px-4 py-2 text-sm text-slate-950 hover:bg-slate-200 print:bg-transparent print:p-0 print:underline"
             >
               {link.label}

@@ -11,6 +11,7 @@ Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https:/
 - Three.js avec React Three Fiber et drei
 - Tailwind CSS
 - Hébergement chez Infomaniak (Suisse), déployé par GitHub Actions
+- Statistiques de visite anonymes avec GoatCounter
 
 ## Lancer le projet
 
@@ -34,6 +35,22 @@ La liste des tests et leur rôle est détaillée dans [TESTS.md](TESTS.md).
 ## Contenu
 
 Tout le contenu du CV se trouve dans [`frontend/src/data/planets.ts`](frontend/src/data/planets.ts). Il alimente à la fois la scène 3D et la version texte.
+
+## Statistiques
+
+Les visites sont mesurées avec [GoatCounter](https://www.goatcounter.com) : anonyme, sans cookies, donc sans bandeau de consentement. Le tableau de bord est sur [dylseat.goatcounter.com](https://dylseat.goatcounter.com).
+
+En plus des visites, ces actions sont comptées comme événements (fonction `trackEvent` dans [`frontend/src/analytics.ts`](frontend/src/analytics.ts)) :
+
+| Événement | Quand |
+| --- | --- |
+| `section/<id>` | Ouverture d'une section, depuis la scène 3D ou le menu (par exemple `section/competences`) |
+| `version-texte` | Ouverture de la version texte depuis le menu |
+| `version-texte/lien-cv` | Arrivée directe sur la version texte par un lien `#cv` |
+| `imprimer-cv` | Clic sur « Imprimer / enregistrer en PDF » |
+| `lien/<nom>` | Clic sur un lien de contact (par exemple `lien/linkedin`) |
+
+Rien n'est compté en local (`localhost`), et le site fonctionne normalement si GoatCounter est bloqué. Les visiteurs qui le bloquent ne sont pas comptés : les chiffres sont un minimum.
 
 ## Déploiement
 

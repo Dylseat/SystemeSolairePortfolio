@@ -1,3 +1,4 @@
+import { trackEvent } from '../analytics'
 import EntryList from './EntryList'
 import LinkList from './LinkList'
 import ProfilePhoto from './ProfilePhoto'
@@ -26,7 +27,10 @@ function CvView({ onClose }: CvViewProps) {
           )}
           <button
             className="rounded-full bg-slate-800 px-4 py-2 text-sm hover:bg-slate-700"
-            onClick={() => window.print()}
+            onClick={() => {
+              trackEvent('imprimer-cv', 'Impression / PDF du CV')
+              window.print()
+            }}
           >
             Imprimer / enregistrer en PDF
           </button>

@@ -86,6 +86,32 @@ test.describe('système solaire', () => {
 
     await expect(panelTitle(page, 'Présentation')).toBeVisible()
   })
+
+  test('compte les sections ouvertes dans les statistiques, une fois par ouverture', async ({
+    page,
+  }) => {
+    // Faux GoatCounter qui garde les événements reçus
+    await page.addInitScript(() => {
+      const events: string[] = []
+      Object.assign(globalThis, {
+        statsEvents: events,
+        goatcounter: { count: ({ path }: { path: string }) => events.push(path) },
+      })
+    })
+    await page.goto('/')
+    const competences = menu(page).getByRole('button', { name: 'Compétences' })
+
+    await competences.click()
+    await expect(panelTitle(page, 'Compétences')).toBeVisible()
+    await competences.click()
+    await menu(page).getByRole('button', { name: 'Contact' }).click()
+    await expect(panelTitle(page, 'Contact')).toBeVisible()
+
+    const events = await page.evaluate(
+      () => (globalThis as unknown as { statsEvents: string[] }).statsEvents,
+    )
+    expect(events).toEqual(['section/competences', 'section/contact'])
+  })
 })
 
 test.describe('version texte', () => {

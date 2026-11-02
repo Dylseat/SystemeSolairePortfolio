@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 import LinkList from './LinkList'
 
 const links = [
@@ -11,6 +12,16 @@ describe('LinkList', () => {
   it('affiche un lien par entrée', () => {
     render(<LinkList links={links} />)
     expect(screen.getAllByRole('link')).toHaveLength(2)
+  })
+
+  it('compte les clics sur les liens dans les statistiques', async () => {
+    const count = vi.fn()
+    vi.stubGlobal('goatcounter', { count })
+    render(<LinkList links={links} />)
+
+    await userEvent.click(screen.getByRole('link', { name: /GitHub/ }))
+    expect(count).toHaveBeenCalledWith({ path: 'lien/github', title: 'Lien : GitHub', event: true })
+    vi.unstubAllGlobals()
   })
 
   it('ouvre les liens externes dans un nouvel onglet', () => {
