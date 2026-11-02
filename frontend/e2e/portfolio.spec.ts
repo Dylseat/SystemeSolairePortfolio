@@ -6,6 +6,13 @@ const menu = (page: Page) => page.getByRole('navigation', { name: 'Sections du p
 const panelTitle = (page: Page, name: string) =>
   page.getByRole('heading', { level: 2, name, exact: true })
 
+// Les tests ne dépendent pas du service de statistiques : son script est remplacé par un script vide
+test.beforeEach(async ({ page }) => {
+  await page.route(/gc\.zgo\.at/, (route) =>
+    route.fulfill({ contentType: 'text/javascript', body: '' }),
+  )
+})
+
 // Erreurs JavaScript de la page, pour détecter un plantage (écran vide)
 function collectErrors(page: Page) {
   const errors: string[] = []
