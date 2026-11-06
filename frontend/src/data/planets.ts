@@ -19,6 +19,8 @@ export type InfoPanelData = {
   entries?: Entry[]
   links?: Link[]
   imageUrl?: string
+  // Lien vers le CV en PDF, proposé en téléchargement
+  cvUrl?: string
   // Section pas encore terminée : affiche un badge « En construction »
   inProgress?: boolean
 }
@@ -54,6 +56,8 @@ export const sunData: InfoPanelData = {
     'Compétition de versus fighting, basketball, science-fiction',
   ],
   imageUrl: '/images/Profile.jpg',
+  // Version sans téléphone, adresse, date de naissance ni nationalité
+  cvUrl: '/CV-Dylan-Diaz.pdf',
 }
 
 export const planets: PlanetData[] = [

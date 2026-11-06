@@ -49,6 +49,17 @@ describe('InfoPanel', () => {
     )
   })
 
+  it('propose le CV en PDF seulement quand la section en a un', () => {
+    const { rerender } = render(<InfoPanel section={section} onClose={() => {}} />)
+    expect(screen.queryByRole('link', { name: /Télécharger mon CV/ })).not.toBeInTheDocument()
+
+    rerender(<InfoPanel section={{ ...section, cvUrl: '/cv.pdf' }} onClose={() => {}} />)
+    expect(screen.getByRole('link', { name: /Télécharger mon CV/ })).toHaveAttribute(
+      'href',
+      '/cv.pdf',
+    )
+  })
+
   it('signale une section en construction seulement quand elle l’est', () => {
     const { rerender } = render(<InfoPanel section={section} onClose={() => {}} />)
     expect(screen.queryByText('En construction')).not.toBeInTheDocument()

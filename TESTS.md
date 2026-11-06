@@ -56,10 +56,11 @@ npm run test:e2e      # end-to-end (la première fois : npx playwright install c
 | Fichier | Tests | Pourquoi |
 | --- | --- | --- |
 | `LinkList.test.tsx` | Un lien par entrée ; liens externes dans un nouvel onglet (`noreferrer`) ; email dans le même onglet ; adresse en clair pour l'impression ; clic compté dans les statistiques | Le visiteur ne quitte pas le portfolio ; le PDF imprimé reste utile |
+| `CvDownloadLink.test.tsx` | Lien vers le PDF avec l'attribut `download` ; téléchargement compté dans les statistiques | Le recruteur repart avec un vrai CV |
 | `EntryList.test.tsx` | Titre, lieu et période ; détails affichés quand ils existent ; pas de liste vide ; ordre respecté | Lisibilité des expériences et formations |
-| `InfoPanel.test.tsx` | Tout le contenu affiché ; fonctionne sans description ; photo seulement si présente ; badge « En construction » seulement si besoin ; bouton « Fermer » | Le panneau s'adapte à chaque section |
+| `InfoPanel.test.tsx` | Tout le contenu affiché ; fonctionne sans description ; photo seulement si présente ; CV PDF seulement si présent ; badge « En construction » seulement si besoin ; bouton « Fermer » | Le panneau s'adapte à chaque section |
 | `SectionMenu.test.tsx` | Un bouton par section + « Version texte » ; section active signalée (`aria-current`) ; bon id transmis | Navigation et accessibilité (lecteurs d'écran) |
-| `CvView.test.tsx` | Nom et titre ; toutes les sections sauf le mini-jeu ; liens de contact ; impression (comptée dans les statistiques) ; bouton retour seulement si la 3D est disponible | La version texte est ce que lit un recruteur pressé |
+| `CvView.test.tsx` | Nom et titre ; toutes les sections sauf le mini-jeu ; liens de contact ; impression (comptée dans les statistiques) ; téléchargement du CV en PDF ; bouton retour seulement si la 3D est disponible | La version texte est ce que lit un recruteur pressé |
 | `StartHint.test.tsx` | Texte d'aide ; ne bloque pas les clics ; écran de chargement annoncé aux lecteurs d'écran | Accessibilité |
 
 ## Tests fonctionnels — `src/App.test.tsx`
