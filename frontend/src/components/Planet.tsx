@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Billboard, Text, useCursor } from '@react-three/drei'
 import type { Group } from 'three'
@@ -12,6 +12,8 @@ type PlanetProps = Pick<
   showLabel: boolean
   paused: boolean
   onClick: () => void
+  // Décor qui accompagne la planète sur son orbite (par exemple l'aperçu du mini-jeu)
+  children?: ReactNode
 }
 
 function Planet({
@@ -26,6 +28,7 @@ function Planet({
   showLabel,
   paused,
   onClick,
+  children,
 }: PlanetProps) {
   const planetGroupRef = useRef<Group>(null)
   const [hovered, setHovered] = useState(false)
@@ -73,6 +76,8 @@ function Planet({
             {label}
           </Text>
         </Billboard>
+
+        {children}
       </group>
     </group>
   )

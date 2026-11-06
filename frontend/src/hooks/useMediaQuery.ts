@@ -15,6 +15,11 @@ export function useIsSmallScreen() {
   return useMediaQuery('(max-width: 767px)')
 }
 
+// Écran tactile (téléphone, tablette) : pas de souris précise ni de clavier
+export function useIsTouchScreen() {
+  return useMediaQuery('(pointer: coarse)')
+}
+
 export function usePrefersReducedMotion() {
   return useMediaQuery('(prefers-reduced-motion: reduce)')
 }

@@ -3,7 +3,7 @@
 [![CI](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml)
 [![Déploiement](https://img.shields.io/github/deployments/Dylseat/SystemeSolairePortfolio/production?label=d%C3%A9ploiement)](https://github.com/Dylseat/SystemeSolairePortfolio/deployments)
 
-Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https://dylandiaz.ch) : chaque astre est une section du portfolio (présentation, compétences, technologies, expériences, formation, contact). Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`, et le CV peut être téléchargé en PDF.
+Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https://dylandiaz.ch) : chaque astre est une section du portfolio (présentation, compétences, technologies, expériences, formation, contact), avec un mini-jeu de tir spatial en 3D. Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`, et le CV peut être téléchargé en PDF.
 
 ## Stack
 
@@ -52,6 +52,7 @@ En plus des visites, ces actions sont comptées comme événements (fonction `tr
 | `imprimer-cv` | Clic sur « Imprimer / enregistrer en PDF » |
 | `telecharger-cv` | Clic sur « Télécharger mon CV (PDF) » |
 | `lien/<nom>` | Clic sur un lien de contact (par exemple `lien/linkedin`) |
+| `mini-jeu/partie` | Lancement d'une partie du mini-jeu |
 
 Rien n'est compté en local (`localhost`), et le site fonctionne normalement si GoatCounter est bloqué. Les visiteurs qui le bloquent ne sont pas comptés : les chiffres sont un minimum.
 
@@ -76,3 +77,7 @@ Le fichier [`frontend/public/.htaccess`](frontend/public/.htaccess) est déploy�
 ## Licence
 
 Le code est sous licence [MIT](LICENSE). Le contenu personnel (photo, CV, textes du parcours) n'est pas couvert par cette licence et reste la propriété de Dylan Diaz.
+
+## Crédits
+
+La musique du mini-jeu ([`frontend/public/audio/mini-jeu.mp3`](frontend/public/audio/mini-jeu.mp3)) est « Mystics of the Cosmos » d'Unicorn Heads, compressée en MP3 80 kbit/s mono pour alléger le site. Elle n'est pas couverte par la licence MIT du code.

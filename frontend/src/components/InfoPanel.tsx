@@ -1,16 +1,22 @@
+import { lazy, Suspense } from 'react'
 import CvDownloadLink from './CvDownloadLink'
 import EntryList from './EntryList'
 import LinkList from './LinkList'
 import ProfilePhoto from './ProfilePhoto'
 import type { InfoPanelData } from '../data/planets'
 
+// Démo du mini-jeu, chargée seulement à l'ouverture de son panneau
+const GamePreview = lazy(() => import('../game/GamePreview'))
+
 type InfoPanelProps = {
   section: InfoPanelData
   onClose: () => void
+  onPlay?: () => void
 }
 
-function InfoPanel({ section, onClose }: InfoPanelProps) {
-  const { label, description, items, entries, links, imageUrl, cvUrl, inProgress } = section
+function InfoPanel({ section, onClose, onPlay }: InfoPanelProps) {
+  const { label, description, items, entries, links, imageUrl, cvUrl, playable, inProgress } =
+    section
 
   return (
     // Sur mobile : tiroir en bas de l'écran. Sur grand écran : panneau en haut à droite
@@ -36,6 +42,31 @@ function InfoPanel({ section, onClose }: InfoPanelProps) {
       )}
 
       {cvUrl && <CvDownloadLink href={cvUrl} className="mt-4" />}
+
+      {playable && (
+        <div className="mt-4">
+          <Suspense fallback={<div className="h-56 w-full rounded-xl bg-slate-950" />}>
+            <GamePreview />
+          </Suspense>
+        </div>
+      )}
+
+      {playable && onPlay && (
+        <button
+          className="mt-4 inline-block rounded-full bg-orange-400 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-orange-300"
+          onClick={onPlay}
+        >
+          <span aria-hidden="true">🎮 </span>Jouer
+        </button>
+      )}
+
+      {/* Jeu indisponible ici (écran tactile) : on prévient plutôt que de cacher la section */}
+      {playable && !onPlay && (
+        <p className="mt-4 rounded-lg border border-amber-400/40 bg-amber-400/15 px-3 py-2 text-sm text-amber-200">
+          <span aria-hidden="true">🚧 </span>Version mobile en construction : pour l’instant, le
+          jeu se joue sur ordinateur, au clavier.
+        </p>
+      )}
 
       {items && inProgress && (
         <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">

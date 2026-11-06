@@ -4,6 +4,11 @@ import { describe, expect, it, vi } from 'vitest'
 import InfoPanel from './InfoPanel'
 import type { InfoPanelData } from '../data/planets'
 
+// La démo du jeu dessine dans un canvas, absent de jsdom : un simple repère suffit ici
+vi.mock('../game/GamePreview', () => ({
+  default: () => <div data-testid="demo-du-jeu" />,
+}))
+
 const section: InfoPanelData = {
   id: 'test',
   label: 'Ma section',
@@ -58,6 +63,31 @@ describe('InfoPanel', () => {
       'href',
       '/cv.pdf',
     )
+  })
+
+  it('propose « Jouer » seulement pour une section jouable', async () => {
+    const onPlay = vi.fn()
+    const { rerender } = render(<InfoPanel section={section} onClose={() => {}} onPlay={onPlay} />)
+    expect(screen.queryByRole('button', { name: /Jouer/ })).not.toBeInTheDocument()
+
+    expect(screen.queryByTestId('demo-du-jeu')).not.toBeInTheDocument()
+
+    rerender(
+      <InfoPanel section={{ ...section, playable: true }} onClose={() => {}} onPlay={onPlay} />,
+    )
+    expect(await screen.findByTestId('demo-du-jeu')).toBeInTheDocument()
+    expect(screen.queryByText(/Version mobile en construction/)).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Jouer/ }))
+    expect(onPlay).toHaveBeenCalledOnce()
+  })
+
+  it('prévient que la version mobile est en construction quand le jeu n’est pas jouable ici', async () => {
+    render(<InfoPanel section={{ ...section, playable: true }} onClose={() => {}} />)
+
+    expect(screen.getByText(/Version mobile en construction/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Jouer/ })).not.toBeInTheDocument()
+    // La démo reste visible, pour montrer à quoi ressemble le jeu
+    expect(await screen.findByTestId('demo-du-jeu')).toBeInTheDocument()
   })
 
   it('signale une section en construction seulement quand elle l’est', () => {

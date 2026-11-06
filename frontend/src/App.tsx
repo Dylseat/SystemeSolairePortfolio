@@ -5,6 +5,8 @@ import LoadingScreen from './components/LoadingScreen'
 
 // La scène 3D (Three.js) est chargée à part pour afficher la page tout de suite
 const SolarScene = lazy(() => import('./components/SolarScene'))
+// Le mini-jeu n'est chargé que si le visiteur clique sur « Jouer »
+const GameOverlay = lazy(() => import('./game/GameOverlay'))
 
 const CV_HASH = '#cv'
 
@@ -18,6 +20,7 @@ function App() {
   const [isTextView, setIsTextView] = useState(
     () => window.location.hash === CV_HASH,
   )
+  const [isGameOpen, setIsGameOpen] = useState(false)
 
   const showTextView = (show: boolean) => {
     if (show) trackEvent('version-texte', 'Version texte : ouverte depuis le menu')
@@ -46,7 +49,15 @@ function App() {
     <main className="h-screen w-screen bg-slate-950">
       <div className="h-full w-full print:hidden">
         <Suspense fallback={<LoadingScreen />}>
-          <SolarScene onOpenTextView={() => showTextView(true)} />
+          {/* Une seule scène 3D à la fois : le système solaire est retiré pendant la partie */}
+          {isGameOpen ? (
+            <GameOverlay onClose={() => setIsGameOpen(false)} />
+          ) : (
+            <SolarScene
+              onOpenTextView={() => showTextView(true)}
+              onPlayGame={() => setIsGameOpen(true)}
+            />
+          )}
         </Suspense>
       </div>
 

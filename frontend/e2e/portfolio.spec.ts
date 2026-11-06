@@ -114,6 +114,49 @@ test.describe('système solaire', () => {
   })
 })
 
+test.describe('mini-jeu', () => {
+  test('se lance depuis la planète Mini-jeu, se joue et se quitte', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name === 'mobile', 'Le jeu se joue au clavier : version mobile à venir')
+    const errors = collectErrors(page)
+    await page.goto('/')
+
+    await menu(page).getByRole('button', { name: 'Mini-jeu' }).click()
+    // La démo du jeu tourne dans le panneau, au-dessus du bouton « Jouer »
+    await expect(page.locator('canvas[aria-hidden="true"]')).toBeVisible()
+    await page.getByRole('button', { name: /Jouer/ }).click()
+
+    const game = page.getByRole('dialog', { name: 'Mini-jeu' })
+    await expect(game).toBeVisible()
+    await expect(game.locator('canvas')).toBeVisible()
+
+    await game.getByRole('button', { name: 'Commencer' }).click()
+    await expect(page.getByRole('status')).toHaveText('Vague 1')
+    // Quelques déplacements et tirs : la partie ne doit pas planter
+    await page.keyboard.down('KeyD')
+    await page.keyboard.down('Space')
+    await page.waitForTimeout(1500)
+    await page.keyboard.up('KeyD')
+    await page.keyboard.up('Space')
+    await expect(game.getByText('Vies')).toBeVisible()
+
+    await page.keyboard.press('Escape')
+    await expect(game).toBeHidden()
+    await expect(menu(page)).toBeVisible()
+    expect(errors).toEqual([])
+  })
+
+  test('prévient sur mobile que la version mobile est en construction', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile', 'Message propre aux écrans tactiles')
+    await page.goto('/')
+
+    await menu(page).getByRole('button', { name: 'Mini-jeu' }).click()
+    await expect(page.getByText(/Version mobile en construction/)).toBeVisible()
+    await expect(page.getByRole('button', { name: /Jouer/ })).toHaveCount(0)
+    // La démo reste visible, pour montrer à quoi ressemble le jeu
+    await expect(page.locator('canvas[aria-hidden="true"]')).toBeVisible()
+  })
+})
+
 test.describe('version texte', () => {
   test('s’ouvre depuis le menu et revient au système solaire', async ({ page }) => {
     await page.goto('/')
