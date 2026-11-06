@@ -50,8 +50,9 @@ export const sunData: InfoPanelData = {
     'CFC Informaticien – Développement d’applications',
     '4 ans d’expérience en C# / .NET',
     'Français (langue maternelle), anglais B2 (professionnel)',
-    'Développement de jeux vidéo sur Unity (autoformation)',
-    'Compétition de versus fighting, basketball, science-fiction',
+    'Développement de jeux vidéo sur Unity (autoformation, créativité)',
+    'Compétition de versus fighting (discipline, mental)',
+    'Basketball (esprit d’équipe), science-fiction (imagination)',
   ],
   imageUrl: '/images/Profile.jpg',
 }
@@ -66,7 +67,7 @@ export const planets: PlanetData[] = [
       'Frameworks : .NET, React, Node.js, Three.js, WordPress',
       'Bases de données : PostgreSQL, MariaDB, SQL',
       'Outils : Git, GitLab, GitHub, Docker, Markdown, GoatCounter',
-      'Méthodes : Scrum, Git Flow, CI/CD, Tests automatisés, API REST, BPMN, ticketing',
+      'Méthodes : Scrum, Git Flow, CI/CD, tests automatisés, API REST, BPMN, ticketing',
       'Domaines : développement web, développement logiciel, tests logiciels, maintenance applicative, documentation technique, travail en équipe agile',
     ],
     color: '#3b82f6',
@@ -81,7 +82,7 @@ export const planets: PlanetData[] = [
     description: 'Mon apprentissage en entreprise et mes activités à côté.',
     entries: [
       {
-        title: 'Apprenti Informaticien Développeur d’applications CFC',
+        title: 'Apprenti Informaticien Développeur d’applications',
         place: 'Objectis, Yverdon',
         period: '2023 – 2026',
         details: [
@@ -94,7 +95,7 @@ export const planets: PlanetData[] = [
         ],
       },
       {
-        title: 'Apprenti Informaticien Développeur d’applications CFC',
+        title: 'Apprenti Informaticien Développeur d’applications',
         place: 'Orif, Vaulruz',
         period: '2022 – 2023',
         details: [
