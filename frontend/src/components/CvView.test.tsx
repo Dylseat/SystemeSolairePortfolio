@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import CvView from './CvView'
-import { moonData, planets, profile } from '../data/planets'
+import { moonData, planets, profile, sunData } from '../data/planets'
 
 describe('CvView', () => {
   afterEach(() => {
@@ -56,6 +56,14 @@ describe('CvView', () => {
     await userEvent.click(screen.getByRole('button', { name: /Imprimer/ }))
     expect(count).toHaveBeenCalledWith(expect.objectContaining({ path: 'imprimer-cv', event: true }))
     vi.unstubAllGlobals()
+  })
+
+  it('propose de télécharger le CV en PDF', () => {
+    render(<CvView />)
+    expect(screen.getByRole('link', { name: /Télécharger mon CV/ })).toHaveAttribute(
+      'href',
+      sunData.cvUrl,
+    )
   })
 
   it('propose de revenir au système solaire quand la 3D est disponible', async () => {

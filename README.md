@@ -48,6 +48,7 @@ En plus des visites, ces actions sont comptées comme événements (fonction `tr
 | `version-texte` | Ouverture de la version texte depuis le menu |
 | `version-texte/lien-cv` | Arrivée directe sur la version texte par un lien `#cv` |
 | `imprimer-cv` | Clic sur « Imprimer / enregistrer en PDF » |
+| `telecharger-cv` | Clic sur « Télécharger mon CV (PDF) » |
 | `lien/<nom>` | Clic sur un lien de contact (par exemple `lien/linkedin`) |
 
 Rien n'est compté en local (`localhost`), et le site fonctionne normalement si GoatCounter est bloqué. Les visiteurs qui le bloquent ne sont pas comptés : les chiffres sont un minimum.

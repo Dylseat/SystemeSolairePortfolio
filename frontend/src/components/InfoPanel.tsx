@@ -1,3 +1,4 @@
+import CvDownloadLink from './CvDownloadLink'
 import EntryList from './EntryList'
 import LinkList from './LinkList'
 import ProfilePhoto from './ProfilePhoto'
@@ -9,7 +10,7 @@ type InfoPanelProps = {
 }
 
 function InfoPanel({ section, onClose }: InfoPanelProps) {
-  const { label, description, items, entries, links, imageUrl, inProgress } = section
+  const { label, description, items, entries, links, imageUrl, cvUrl, inProgress } = section
 
   return (
     // Sur mobile : tiroir en bas de l'écran. Sur grand écran : panneau en haut à droite
@@ -33,6 +34,8 @@ function InfoPanel({ section, onClose }: InfoPanelProps) {
           {description}
         </p>
       )}
+
+      {cvUrl && <CvDownloadLink href={cvUrl} className="mt-4" />}
 
       {items && inProgress && (
         <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">

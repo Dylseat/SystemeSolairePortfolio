@@ -1,4 +1,5 @@
 import { trackEvent } from '../analytics'
+import CvDownloadLink from './CvDownloadLink'
 import EntryList from './EntryList'
 import LinkList from './LinkList'
 import ProfilePhoto from './ProfilePhoto'
@@ -34,6 +35,7 @@ function CvView({ onClose }: CvViewProps) {
           >
             Imprimer / enregistrer en PDF
           </button>
+          {sunData.cvUrl && <CvDownloadLink href={sunData.cvUrl} />}
         </div>
 
         <header className="flex flex-col gap-6 sm:flex-row sm:items-center">
