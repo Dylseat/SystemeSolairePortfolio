@@ -70,3 +70,7 @@ Configuration dans GitHub, *Settings → Secrets and variables → Actions* :
 Tant que `INFOMANIAK_HOST` n'est pas définie, le déploiement est ignoré.
 
 Le fichier [`frontend/public/.htaccess`](frontend/public/.htaccess) est déployé avec le site : il redirige `http://` et `www.` vers `https://dylandiaz.ch`.
+
+## Licence
+
+Le code est sous licence [MIT](LICENSE). Le contenu personnel (photo, CV, textes du parcours) n'est pas couvert par cette licence et reste la propriété de Dylan Diaz.
