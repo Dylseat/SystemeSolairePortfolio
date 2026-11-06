@@ -38,20 +38,20 @@ export type MoonData = PlanetData & {
 
 export const profile = {
   name: 'Dylan Diaz',
-  title: 'Développeur d’applications CFC · C# / .NET',
+  title: 'Développeur web · CFC Informaticien – Développement d’applications',
 }
 
 export const sunData: InfoPanelData = {
   id: 'presentation',
   label: 'Présentation',
   description:
-    'Informaticien CFC fraîchement diplômé, avec 4 ans d’expérience en entreprise sur une plateforme industrielle en C# / .NET : maintenance, correction de bugs, tests unitaires et outils internes. À l’aise en équipe Scrum et dans le suivi par tickets.',
+    'Titulaire d’un CFC en développement d’applications. Autonome, organisé, avec un esprit d’équipe et d’analyse. 4 ans d’expérience en C# / .NET au sein d’une équipe Scrum : maintenance, correction de bugs et tests à tous les niveaux (unitaires, fonctionnels, end-to-end). Passionné par le jeu vidéo, aujourd’hui tourné vers le développement web, pratiqué à travers un site personnel.',
   items: [
     'CFC Informaticien – Développement d’applications',
     '4 ans d’expérience en C# / .NET',
-    'Français (langue maternelle), anglais B2',
-    'Analyse, esprit d’équipe, organisation, autonomie',
-    'Passionné de jeux vidéo, de science-fiction et de basketball',
+    'Français (langue maternelle), anglais B2 (professionnel)',
+    'Développement de jeux vidéo sur Unity (autoformation)',
+    'Compétition de versus fighting, basketball, science-fiction',
   ],
   imageUrl: '/images/Profile.jpg',
 }
@@ -64,9 +64,10 @@ export const planets: PlanetData[] = [
     items: [
       'Langages : C#, JavaScript, TypeScript, Python, Bash',
       'Frameworks : .NET, React, Node.js, Three.js, WordPress',
-      'Bases de données : PostgreSQL, SQL',
-      'Outils : Git, GitLab, GitHub, Docker, Markdown, Microsoft Office',
-      'Méthodes : Scrum, Git Flow, CI/CD, tests unitaires, API REST, BPMN, ticketing',
+      'Bases de données : PostgreSQL, MariaDB, SQL',
+      'Outils : Git, GitLab, GitHub, Docker, Markdown, GoatCounter',
+      'Méthodes : Scrum, Git Flow, CI/CD, Tests automatisés, API REST, BPMN, ticketing',
+      'Domaines : développement web, développement logiciel, tests logiciels, maintenance applicative, documentation technique, travail en équipe agile',
     ],
     color: '#3b82f6',
     size: 0.35,
@@ -85,11 +86,11 @@ export const planets: PlanetData[] = [
         period: '2023 – 2026',
         details: [
           'Évolution et maintenance d’une plateforme .NET',
-          'Correction de bugs et traitement de tickets',
+          'Correction de bugs et traitement de tickets (Redmine)',
           'Écriture d’environ 500 tests unitaires',
-          'Projet : générateur de licences interne',
           'Intégration et gestion des traductions',
           'Release notes rédigées en anglais (Markdown)',
+          'Générateur de licences en ligne de commande (C#), conçu et développé seul : génération de clés signées et chiffrées avec date d’expiration, pour gérer l’accès des clients aux composants et plugins du logiciel (avec ou sans template)',
         ],
       },
       {
@@ -97,19 +98,16 @@ export const planets: PlanetData[] = [
         place: 'Orif, Vaulruz',
         period: '2022 – 2023',
         details: [
-          'Shooter vertical développé à 3 (Python, Pygame)',
-          'Projet : carte interactive de la Suisse',
           'Rédaction de documentation technique',
+          'Carte interactive de la Suisse (Python, Tkinter, Pillow) : un clic sur la carte affiche le canton correspondant, grâce à la détection de couleur et à un algorithme de remplissage (flood fill)',
+          'Générateur de mots de passe (Python, Tkinter) : transformation d’un script (V1) en application graphique (V2), de la rédaction du cahier des charges au choix du framework ; longueur et types de caractères paramétrables (lettres, chiffres, caractères spéciaux)',
         ],
       },
       {
-        title: 'Développeur web & joueur e-sport – Versus Fighting',
-        place: 'Dream Team, structure e-sport',
+        title: 'Développeur web – Structure e-sport Versus Fighting',
+        place: 'Dream Team',
         period: '2018 – aujourd’hui',
-        details: [
-          'Développement et maintenance du site web',
-          'Joueur en compétition de versus fighting',
-        ],
+        details: ['Développement et maintenance du site web (WordPress)'],
       },
     ],
     color: '#22c55e',
