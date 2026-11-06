@@ -36,6 +36,14 @@ describe('données du portfolio', () => {
     }
   })
 
+  it('sépare les compétences et les technologies, comme sur le CV', () => {
+    const ids = planets.map((planet) => planet.id)
+    const technologies = planets.find((planet) => planet.id === 'technologies')
+
+    expect(ids.indexOf('technologies')).toBe(ids.indexOf('competences') + 1)
+    expect(technologies?.items?.some((item) => item.startsWith('Langages'))).toBe(true)
+  })
+
   it('signale que le mini-jeu est en construction', () => {
     const miniGame = planets.find((planet) => planet.id === 'mini-jeu')
     expect(miniGame?.inProgress).toBe(true)

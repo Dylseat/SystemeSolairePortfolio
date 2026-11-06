@@ -3,7 +3,7 @@
 [![CI](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml)
 [![Déploiement](https://img.shields.io/github/deployments/Dylseat/SystemeSolairePortfolio/production?label=d%C3%A9ploiement)](https://github.com/Dylseat/SystemeSolairePortfolio/deployments)
 
-Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https://dylandiaz.ch) : chaque astre est une section du portfolio (présentation, compétences, expériences, formation, contact). Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`.
+Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https://dylandiaz.ch) : chaque astre est une section du portfolio (présentation, compétences, technologies, expériences, formation, contact). Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`.
 
 ## Stack
 

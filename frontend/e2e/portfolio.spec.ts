@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const SECTIONS = ['Présentation', 'Compétences', 'Expériences', 'Formation', 'Mini-jeu', 'Contact']
+const SECTIONS = ['Présentation', 'Compétences', 'Technologies', 'Expériences', 'Formation', 'Mini-jeu', 'Contact']
 
 const menu = (page: Page) => page.getByRole('navigation', { name: 'Sections du portfolio' })
 const panelTitle = (page: Page, name: string) =>
@@ -46,7 +46,7 @@ test.describe('système solaire', () => {
 
     await competences.click()
     await expect(panelTitle(page, 'Compétences')).toBeVisible()
-    await expect(page.getByText(/Langages : C#/)).toBeVisible()
+    await expect(page.getByText('Développement web', { exact: true })).toBeVisible()
     await expect(competences).toHaveAttribute('aria-current', 'true')
     await expect(page.getByText(/une planète ou choisis une section/)).toBeHidden()
 
