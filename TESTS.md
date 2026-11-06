@@ -30,6 +30,7 @@ npm run test:e2e      # end-to-end (la première fois : npx playwright install c
 | Les liens sont en `https://` ou `mailto:` | Pas de lien cassé ou non sécurisé |
 | Aucune donnée personnelle sensible | Garde-fou : ni téléphone, ni date de naissance, ni adresse postale sur le site public |
 | La photo de profil existe | Pas d'image cassée dans le panneau et la version texte |
+| Compétences et technologies sont deux planètes qui se suivent, comme sur le CV | Le site et le CV restent organisés de la même façon |
 | Les orbites des planètes ne se chevauchent pas | Deux planètes ne peuvent pas se traverser en tournant |
 | La Lune tourne entre le Soleil et la première planète | Elle ne traverse ni le Soleil ni une planète |
 | Le mini-jeu est signalé « en construction » | Le visiteur sait que le jeu n'est pas encore jouable |
