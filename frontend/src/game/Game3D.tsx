@@ -20,6 +20,14 @@ type Game3DProps = {
   onHud: (hud: Hud) => void
 }
 
+type Game3DCanvasProps = Game3DProps & {
+  className?: string
+  // Une seule image, sans animation (« réduire les animations »)
+  still?: boolean
+  // Distance minimale de la caméra : plus petite pour la démo, pour voir les modèles de plus près
+  minDistance?: number
+}
+
 // Nombre maximal d'objets affichés en même temps, par type
 const MAX_ENEMIES = 40
 const MAX_BULLETS = 120
@@ -29,19 +37,22 @@ const MAX_EXPLOSIONS = 30
 const LOOK_AT = new Vector3(0, 6.5, 0)
 const VIEW_DIRECTION = new Vector3(0, -13.5, 15).normalize()
 
-function CameraFit() {
+function CameraFit({ minDistance }: { minDistance: number }) {
   const camera = useThree((state) => state.camera) as PerspectiveCamera
   const size = useThree((state) => state.size)
+  const invalidate = useThree((state) => state.invalidate)
 
   useEffect(() => {
     const aspect = size.width / size.height
     const halfFov = (camera.fov * Math.PI) / 360
     // Assez de recul pour voir toute la largeur du terrain, même dans une fenêtre étroite
     const needed = (WORLD.width / 2 + 2) / (Math.tan(halfFov) * aspect)
-    const distance = Math.max(20, needed)
+    const distance = Math.max(minDistance, needed)
     camera.position.copy(LOOK_AT).addScaledVector(VIEW_DIRECTION, distance)
     camera.lookAt(LOOK_AT)
-  }, [camera, size])
+    // Redessiner avec la nouvelle caméra, même quand la scène n'est pas animée
+    invalidate()
+  }, [camera, size, invalidate, minDistance])
 
   return null
 }
@@ -66,7 +77,13 @@ function updateInstances<T>(
   mesh.instanceMatrix.needsUpdate = true
 }
 
-function GameWorld({ gameRef, readInput, running, onHud }: Game3DProps) {
+function GameWorld({
+  gameRef,
+  readInput,
+  running,
+  onHud,
+  minDistance,
+}: Game3DProps & { minDistance: number }) {
   const player = useRef<Group>(null)
   const drones = useRef<InstancedMesh>(null)
   const zigzags = useRef<InstancedMesh>(null)
@@ -134,7 +151,7 @@ function GameWorld({ gameRef, readInput, running, onHud }: Game3DProps) {
 
   return (
     <>
-      <CameraFit />
+      <CameraFit minDistance={minDistance} />
       <color attach="background" args={['#020617']} />
       <ambientLight intensity={0.6} />
       <directionalLight position={[4, -6, 10]} intensity={1.6} />
@@ -188,14 +205,20 @@ function GameWorld({ gameRef, readInput, running, onHud }: Game3DProps) {
   )
 }
 
-function Game3D(props: Game3DProps) {
+function Game3D({
+  className = 'absolute inset-0',
+  still = false,
+  minDistance = 20,
+  ...props
+}: Game3DCanvasProps) {
   return (
     <Canvas
-      className="absolute inset-0"
+      className={className}
       camera={{ fov: 50 }}
       dpr={[1, 2]}
+      frameloop={still ? 'demand' : 'always'}
     >
-      <GameWorld {...props} />
+      <GameWorld {...props} minDistance={minDistance} />
     </Canvas>
   )
 }

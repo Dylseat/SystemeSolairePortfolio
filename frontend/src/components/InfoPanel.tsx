@@ -5,7 +5,9 @@ import LinkList from './LinkList'
 import ProfilePhoto from './ProfilePhoto'
 import type { InfoPanelData } from '../data/planets'
 
-// Démo du mini-jeu, chargée seulement à l'ouverture de son panneau
+// Démos du mini-jeu, chargées seulement à l'ouverture de son panneau :
+// en 3D sur ordinateur, comme le jeu ; en 2D sur écran tactile, comme la future version mobile
+const GamePreview3D = lazy(() => import('../game/GamePreview3D'))
 const GamePreview = lazy(() => import('../game/GamePreview'))
 
 type InfoPanelProps = {
@@ -46,7 +48,7 @@ function InfoPanel({ section, onClose, onPlay }: InfoPanelProps) {
       {playable && (
         <div className="mt-4">
           <Suspense fallback={<div className="h-56 w-full rounded-xl bg-slate-950" />}>
-            <GamePreview />
+            {onPlay ? <GamePreview3D /> : <GamePreview />}
           </Suspense>
         </div>
       )}

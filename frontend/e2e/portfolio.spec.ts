@@ -121,8 +121,9 @@ test.describe('mini-jeu', () => {
     await page.goto('/')
 
     await menu(page).getByRole('button', { name: 'Mini-jeu' }).click()
-    // La démo du jeu tourne dans le panneau, au-dessus du bouton « Jouer »
-    await expect(page.locator('canvas[aria-hidden="true"]')).toBeVisible()
+    // La démo 3D du jeu tourne dans le panneau, au-dessus du bouton « Jouer »
+    await expect(page.locator('[data-demo="3d"] canvas')).toBeVisible()
+    await expect(page.locator('[data-demo="2d"]')).toHaveCount(0)
     await page.getByRole('button', { name: /Jouer/ }).click()
 
     const game = page.getByRole('dialog', { name: 'Mini-jeu' })
@@ -152,8 +153,9 @@ test.describe('mini-jeu', () => {
     await menu(page).getByRole('button', { name: 'Mini-jeu' }).click()
     await expect(page.getByText(/Version mobile en construction/)).toBeVisible()
     await expect(page.getByRole('button', { name: /Jouer/ })).toHaveCount(0)
-    // La démo reste visible, pour montrer à quoi ressemble le jeu
-    await expect(page.locator('canvas[aria-hidden="true"]')).toBeVisible()
+    // La démo reste visible, en 2D comme la future version mobile
+    await expect(page.locator('canvas[data-demo="2d"]')).toBeVisible()
+    await expect(page.locator('[data-demo="3d"]')).toHaveCount(0)
   })
 })
 

@@ -4,7 +4,7 @@ import { autopilot } from './autopilot'
 import { createGame, step } from './engine'
 import { drawGame } from './render2d'
 
-// Une partie qui se joue toute seule, en 2D, dans le panneau du mini-jeu
+// Une partie qui se joue toute seule, en 2D, dans le panneau du mini-jeu (écrans tactiles)
 function GamePreview() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reducedMotion = usePrefersReducedMotion()
@@ -51,7 +51,7 @@ function GamePreview() {
   }, [reducedMotion])
 
   // Décoratif : le bouton « Jouer » juste en dessous dit déjà de quoi il s'agit
-  return <canvas ref={canvasRef} aria-hidden="true" className="h-56 w-full rounded-xl" />
+  return <canvas ref={canvasRef} aria-hidden="true" data-demo="2d" className="h-56 w-full rounded-xl" />
 }
 
 export default GamePreview

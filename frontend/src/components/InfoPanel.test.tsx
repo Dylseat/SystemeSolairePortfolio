@@ -4,9 +4,12 @@ import { describe, expect, it, vi } from 'vitest'
 import InfoPanel from './InfoPanel'
 import type { InfoPanelData } from '../data/planets'
 
-// La démo du jeu dessine dans un canvas, absent de jsdom : un simple repère suffit ici
+// Les démos du jeu dessinent dans un canvas (2D ou WebGL), absent de jsdom : un simple repère suffit ici
 vi.mock('../game/GamePreview', () => ({
-  default: () => <div data-testid="demo-du-jeu" />,
+  default: () => <div data-testid="demo-2d" />,
+}))
+vi.mock('../game/GamePreview3D', () => ({
+  default: () => <div data-testid="demo-3d" />,
 }))
 
 const section: InfoPanelData = {
@@ -70,12 +73,15 @@ describe('InfoPanel', () => {
     const { rerender } = render(<InfoPanel section={section} onClose={() => {}} onPlay={onPlay} />)
     expect(screen.queryByRole('button', { name: /Jouer/ })).not.toBeInTheDocument()
 
-    expect(screen.queryByTestId('demo-du-jeu')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('demo-3d')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('demo-2d')).not.toBeInTheDocument()
 
     rerender(
       <InfoPanel section={{ ...section, playable: true }} onClose={() => {}} onPlay={onPlay} />,
     )
-    expect(await screen.findByTestId('demo-du-jeu')).toBeInTheDocument()
+    // Sur ordinateur, la démo est en 3D, comme le jeu
+    expect(await screen.findByTestId('demo-3d')).toBeInTheDocument()
+    expect(screen.queryByTestId('demo-2d')).not.toBeInTheDocument()
     expect(screen.queryByText(/Version mobile en construction/)).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /Jouer/ }))
     expect(onPlay).toHaveBeenCalledOnce()
@@ -86,8 +92,9 @@ describe('InfoPanel', () => {
 
     expect(screen.getByText(/Version mobile en construction/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Jouer/ })).not.toBeInTheDocument()
-    // La démo reste visible, pour montrer à quoi ressemble le jeu
-    expect(await screen.findByTestId('demo-du-jeu')).toBeInTheDocument()
+    // La démo reste visible, en 2D comme la future version mobile
+    expect(await screen.findByTestId('demo-2d')).toBeInTheDocument()
+    expect(screen.queryByTestId('demo-3d')).not.toBeInTheDocument()
   })
 
   it('signale une section en construction seulement quand elle l’est', () => {
