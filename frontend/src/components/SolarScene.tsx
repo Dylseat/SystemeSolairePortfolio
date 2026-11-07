@@ -4,23 +4,27 @@ import { Stars } from '@react-three/drei'
 import CameraRig from './CameraRig'
 import InfoPanel from './InfoPanel'
 import Orbit from './Orbit'
+import OrbitBattle from './OrbitBattle'
 import Planet from './Planet'
 import SectionMenu from './SectionMenu'
 import StartHint from './StartHint'
 import Sun from './Sun'
 import { trackEvent } from '../analytics'
 import { moonData, planets, sections, sunData } from '../data/planets'
-import { useIsSmallScreen, usePrefersReducedMotion } from '../hooks/useMediaQuery'
+import { useIsSmallScreen, useIsTouchScreen, usePrefersReducedMotion } from '../hooks/useMediaQuery'
 
 type SolarSceneProps = {
   onOpenTextView: () => void
+  onPlayGame: () => void
 }
 
-function SolarScene({ onOpenTextView }: SolarSceneProps) {
+function SolarScene({ onOpenTextView, onPlayGame }: SolarSceneProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [hasSelected, setHasSelected] = useState(false)
   const isSmallScreen = useIsSmallScreen()
   const reducedMotion = usePrefersReducedMotion()
+  // Le mini-jeu se joue au clavier : la version mobile (tactile) viendra plus tard
+  const isTouchScreen = useIsTouchScreen()
 
   const selectedSection = sections.find((section) => section.id === selectedId)
 
@@ -89,7 +93,9 @@ function SolarScene({ onOpenTextView }: SolarSceneProps) {
               showLabel={selectedId === null || selectedId === planet.id}
               paused={selectedId !== null || reducedMotion}
               onClick={() => select(planet.id)}
-            />
+            >
+              {planet.playable && <OrbitBattle size={planet.size} paused={reducedMotion} />}
+            </Planet>
           ))}
 
           {/* La Lune tourne autour du Soleil sur une orbite inclinée */}
@@ -131,6 +137,7 @@ function SolarScene({ onOpenTextView }: SolarSceneProps) {
         <InfoPanel
           section={selectedSection}
           onClose={() => setSelectedId(null)}
+          onPlay={isTouchScreen ? undefined : onPlayGame}
         />
       )}
     </div>

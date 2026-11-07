@@ -44,9 +44,10 @@ describe('données du portfolio', () => {
     expect(technologies?.items?.some((item) => item.startsWith('Langages'))).toBe(true)
   })
 
-  it('signale que le mini-jeu est en construction', () => {
+  it('propose de jouer au mini-jeu, qui n’est plus en construction', () => {
     const miniGame = planets.find((planet) => planet.id === 'mini-jeu')
-    expect(miniGame?.inProgress).toBe(true)
+    expect(miniGame?.playable).toBe(true)
+    expect(miniGame?.inProgress).toBeFalsy()
   })
 
   it("n'utilise que des liens https ou mailto", () => {

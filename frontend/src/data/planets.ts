@@ -21,6 +21,8 @@ export type InfoPanelData = {
   imageUrl?: string
   // Lien vers le CV en PDF, proposé en téléchargement
   cvUrl?: string
+  // Section qui propose de lancer le mini-jeu
+  playable?: boolean
   // Section pas encore terminée : affiche un badge « En construction »
   inProgress?: boolean
 }
@@ -168,9 +170,13 @@ export const planets: PlanetData[] = [
     id: 'mini-jeu',
     label: 'Mini-jeu',
     description:
-      'Bientôt disponible : un mini-jeu inspiré de Space Invaders avec un système de score.',
-    items: ['Gameplay arcade', 'Scoreboard', 'Classement', 'Sauvegarde des scores'],
-    inProgress: true,
+      'Patrouille orbitale : un jeu de tir spatial en 3D. Détruis les vagues d’ennemis, esquive leurs tirs et bats ton record.',
+    items: [
+      'Clavier : WASD (QWERTZ) ou ZQSD (AZERTY), Espace pour tirer',
+      'Version mobile : en construction',
+      'Classement en ligne : bientôt',
+    ],
+    playable: true,
     color: '#f97316',
     size: 0.55,
     orbitRadius: 7.8,
