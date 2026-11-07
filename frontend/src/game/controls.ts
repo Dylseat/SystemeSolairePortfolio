@@ -62,7 +62,7 @@ export function saveMuted(muted: boolean) {
 
 // Volume de la musique, de 0 à 1, retenu d'une visite à l'autre
 const VOLUME_KEY = 'mini-jeu:volume'
-export const DEFAULT_VOLUME = 0.5
+export const DEFAULT_VOLUME = 0.2
 
 export function loadVolume(): number {
   try {

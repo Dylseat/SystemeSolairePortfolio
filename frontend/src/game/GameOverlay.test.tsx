@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { DEFAULT_VOLUME } from './controls'
 import type { Hud } from './Game3D'
 import GameOverlay from './GameOverlay'
 
@@ -20,13 +21,22 @@ const gameOver = (score: number) =>
 
 // jsdom ne joue pas de son : un faux lecteur retient ce qu'on lui demande
 const players: FakeAudio[] = []
+// Simule un navigateur qui refuse de lancer le son sans clic
+let refusePlay = false
 class FakeAudio {
   loop = false
   muted = false
   volume = 1
   currentTime = 0
-  play = vi.fn(() => Promise.resolve())
-  pause = vi.fn()
+  paused = true
+  play = vi.fn(() => {
+    if (refusePlay) return Promise.reject(new Error('NotAllowedError'))
+    this.paused = false
+    return Promise.resolve()
+  })
+  pause = vi.fn(() => {
+    this.paused = true
+  })
   src: string
   constructor(src: string) {
     this.src = src
@@ -37,12 +47,14 @@ class FakeAudio {
 describe('GameOverlay', () => {
   beforeEach(() => {
     players.length = 0
+    refusePlay = false
     vi.stubGlobal('Audio', FakeAudio)
   })
 
   afterEach(() => {
     localStorage.clear()
     vi.unstubAllGlobals()
+    vi.useRealTimers()
   })
 
   it('présente le jeu et ses commandes au clavier', () => {
@@ -87,11 +99,8 @@ describe('GameOverlay', () => {
     expect(localStorage.getItem('mini-jeu:meilleur-score')).toBe('5000')
   })
 
-  it('ne charge la musique qu’au lancement de la partie, puis la joue en boucle', async () => {
+  it('lance la musique en boucle dès l’écran d’intro', () => {
     render(<GameOverlay onClose={() => {}} />)
-    expect(players).toHaveLength(0)
-
-    await userEvent.click(screen.getByRole('button', { name: 'Commencer' }))
 
     expect(players).toHaveLength(1)
     expect(players[0].src).toBe('/audio/mini-jeu.mp3')
@@ -99,27 +108,66 @@ describe('GameOverlay', () => {
     expect(players[0].play).toHaveBeenCalledOnce()
   })
 
-  it('arrête la musique en fin de partie et quand on quitte', async () => {
-    const { unmount } = render(<GameOverlay onClose={() => {}} />)
+  it('garde la musique en fin de partie et quand on rejoue, sans revenir au début', async () => {
+    render(<GameOverlay onClose={() => {}} />)
     await userEvent.click(screen.getByRole('button', { name: 'Commencer' }))
+    players[0].currentTime = 42
 
     await gameOver(100)
-    expect(players[0].pause).toHaveBeenCalledTimes(1)
+    await userEvent.click(screen.getByRole('button', { name: 'Rejouer' }))
+
+    expect(players).toHaveLength(1)
+    expect(players[0].pause).not.toHaveBeenCalled()
+    expect(players[0].play).toHaveBeenCalledOnce()
+    expect(players[0].currentTime).toBe(42)
+  })
+
+  it('lance la musique au clic sur « Commencer » si le navigateur l’avait refusée', async () => {
+    refusePlay = true
+    render(<GameOverlay onClose={() => {}} />)
+    expect(players[0].paused).toBe(true)
+
+    refusePlay = false
+    await userEvent.click(screen.getByRole('button', { name: 'Commencer' }))
+
+    expect(players[0].paused).toBe(false)
+  })
+
+  it('éteint la musique en fondu d’une seconde quand on quitte', () => {
+    localStorage.setItem('mini-jeu:volume', '0.5')
+    vi.useFakeTimers()
+    const { unmount } = render(<GameOverlay onClose={() => {}} />)
 
     unmount()
-    expect(players[0].pause).toHaveBeenCalledTimes(2)
+    expect(players[0].pause).not.toHaveBeenCalled()
+
+    vi.advanceTimersByTime(500)
+    expect(players[0].volume).toBeCloseTo(0.25)
+    expect(players[0].pause).not.toHaveBeenCalled()
+
+    vi.advanceTimersByTime(500)
+    expect(players[0].volume).toBe(0)
+    expect(players[0].pause).toHaveBeenCalledOnce()
+  })
+
+  it('arrête tout de suite la musique coupée quand on quitte', () => {
+    localStorage.setItem('mini-jeu:son-coupe', 'oui')
+    const { unmount } = render(<GameOverlay onClose={() => {}} />)
+
+    unmount()
+    expect(players[0].pause).toHaveBeenCalledOnce()
   })
 
   it('règle le volume avec le curseur, et s’en souvient', async () => {
     render(<GameOverlay onClose={() => {}} />)
     await userEvent.click(screen.getByRole('button', { name: 'Commencer' }))
     const slider = screen.getByRole('slider', { name: 'Volume de la musique' })
-    expect(players[0].volume).toBe(0.5)
+    expect(players[0].volume).toBe(DEFAULT_VOLUME)
 
-    fireEvent.change(slider, { target: { value: '0.2' } })
+    fireEvent.change(slider, { target: { value: '0.7' } })
 
-    expect(players[0].volume).toBe(0.2)
-    expect(localStorage.getItem('mini-jeu:volume')).toBe('0.2')
+    expect(players[0].volume).toBe(0.7)
+    expect(localStorage.getItem('mini-jeu:volume')).toBe('0.7')
   })
 
   it('coupe et remet le son avec la touche M, et s’en souvient', async () => {
@@ -134,7 +182,7 @@ describe('GameOverlay', () => {
 
     await userEvent.keyboard('m')
     expect(players[0].muted).toBe(false)
-    expect(slider).toHaveValue('0.5')
+    expect(slider).toHaveValue(String(DEFAULT_VOLUME))
   })
 
   it('remet le son quand on bouge le curseur alors qu’il était coupé', async () => {
