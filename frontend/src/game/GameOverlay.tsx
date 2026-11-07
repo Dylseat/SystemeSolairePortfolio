@@ -21,8 +21,33 @@ type GameOverlayProps = {
 
 const START_HUD: Hud = { score: 0, lives: 3, wave: 1, announcing: true, over: false }
 
-// Téléchargée seulement au lancement de la première partie (3 Mo)
+// Téléchargée à l'ouverture du mini-jeu (3 Mo)
 const MUSIC_URL = '/audio/mini-jeu.mp3'
+// Durée du fondu de la musique quand on quitte le jeu
+const MUSIC_FADE_MS = 1000
+const FADE_STEPS = 20
+
+// Baisse le volume petit à petit, puis met en pause
+function fadeOut(audio: HTMLAudioElement) {
+  if (audio.paused || audio.muted || audio.volume === 0) {
+    audio.pause()
+    return
+  }
+  const startVolume = audio.volume
+  let step = 0
+  const timer = setInterval(() => {
+    step += 1
+    audio.volume = Math.max(0, startVolume * (1 - step / FADE_STEPS))
+    if (step < FADE_STEPS) return
+    clearInterval(timer)
+    audio.pause()
+  }, MUSIC_FADE_MS / FADE_STEPS)
+}
+
+// Lance la musique si elle ne joue pas déjà ; lecture refusée par le navigateur : le jeu continue sans
+function playMusic(audio: HTMLAudioElement | null) {
+  if (audio?.paused) audio.play()?.catch(() => {})
+}
 
 const buttonClass =
   'rounded-full px-5 py-2 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300'
@@ -39,18 +64,20 @@ function GameOverlay({ onClose }: GameOverlayProps) {
   const [volume, setVolume] = useState(loadVolume)
   const music = useRef<HTMLAudioElement | null>(null)
 
-  // Les navigateurs n'autorisent le son qu'après un clic : la musique démarre avec la partie
-  const playMusic = () => {
-    if (!music.current) {
-      music.current = new Audio(MUSIC_URL)
-      music.current.loop = true
+  // La musique démarre dès l'écran d'intro : le jeu s'ouvre sur un clic, que le navigateur compte
+  // comme une autorisation de jouer du son. Elle tourne en boucle, sans couper entre les parties,
+  // jusqu'à ce qu'on quitte le jeu, puis s'éteint en fondu.
+  // (Le volume et la coupure du son sont appliqués par les deux effets juste en dessous.)
+  useEffect(() => {
+    const audio = new Audio(MUSIC_URL)
+    audio.loop = true
+    music.current = audio
+    playMusic(audio)
+    return () => {
+      music.current = null
+      fadeOut(audio)
     }
-    music.current.volume = volume
-    music.current.muted = muted
-    music.current.currentTime = 0
-    // Lecture refusée par le navigateur : le jeu continue sans musique
-    music.current.play()?.catch(() => {})
-  }
+  }, [])
 
   // Bouger le curseur remet le son s'il était coupé
   const changeVolume = (value: number) => {
@@ -68,16 +95,14 @@ function GameOverlay({ onClose }: GameOverlayProps) {
     if (music.current) music.current.volume = volume
   }, [volume])
 
-  // La musique s'arrête quand on quitte le jeu
-  useEffect(() => () => music.current?.pause(), [])
-
   const start = () => {
     gameRef.current = createGame()
     pressedKeys.current.clear()
     setHud(START_HUD)
     setIsNewRecord(false)
     setPhase('playing')
-    playMusic()
+    // Si le navigateur a refusé la musique à l'ouverture, ce clic la lance ; sinon elle continue
+    playMusic(music.current)
     trackEvent('mini-jeu/partie', 'Mini-jeu : partie lancée')
   }
 
@@ -87,7 +112,6 @@ function GameOverlay({ onClose }: GameOverlayProps) {
     setHud(next)
     if (!next.over) return
     setPhase('over')
-    music.current?.pause()
     if (next.score > bestScore) {
       saveBestScore(next.score)
       setBestScore(next.score)
