@@ -15,16 +15,18 @@ The workflow can only read the repository (`permissions: contents: read`).
 
 ## The three jobs
 
-They run in sequence: a job only starts if the previous one succeeded. Job and step names are in French in the workflow; they are given as-is below.
+They run in sequence: a job only starts if the previous one succeeded. Job and step names are in French in the workflow: each section below gives the job's name as shown in GitHub Actions, and the tables list the steps under their French names.
 
 ```
-Lint, build et tests unitaires  →  Tests end-to-end  →  Déploiement Infomaniak
-                                                         (main only)
+Lint, build and unit tests  →  End-to-end tests  →  Infomaniak deployment
+                                                    (main only)
 ```
 
 Each job runs on `ubuntu-latest` with Node 24 and installs dependencies with `npm ci` (npm cache keyed on `frontend/package-lock.json`).
 
-### 1. Lint, build et tests unitaires (lint, build and unit tests)
+### 1. Lint, build and unit tests
+
+Job name in GitHub Actions: *Lint, build et tests unitaires*.
 
 | Step | Command | Purpose |
 | --- | --- | --- |
@@ -33,7 +35,9 @@ Each job runs on `ubuntu-latest` with Node 24 and installs dependencies with `np
 | Tests unitaires et fonctionnels | `npm test` | Vitest, JUnit report in `test-reports/unit-junit.xml` |
 | Rapport des tests unitaires | `node scripts/test-summary.mjs …` | French summary in the run's *Summary* tab, even when tests fail |
 
-### 2. Tests end-to-end
+### 2. End-to-end tests
+
+Job name in GitHub Actions: *Tests end-to-end*.
 
 | Step | Command | Purpose |
 | --- | --- | --- |
@@ -44,7 +48,9 @@ Each job runs on `ubuntu-latest` with Node 24 and installs dependencies with `np
 
 Test and report details are in [TESTS.md](../../TESTS.md).
 
-### 3. Déploiement Infomaniak (Infomaniak deployment)
+### 3. Infomaniak deployment
+
+Job name in GitHub Actions: *Déploiement Infomaniak*.
 
 It only runs when all three conditions are met:
 
