@@ -2,7 +2,7 @@
 
 🇫🇷 [Français](TESTS.md) · 🇬🇧 **English**
 
-Three levels of tests, all run automatically by GitHub Actions CI on every push to `main` and on every pull request (see [CICD.en.md](CICD.en.md)).
+Three levels of tests, all run automatically by GitHub Actions CI on every push to `main` and on every pull request (see [CI/CD guide](.github/workflows/README.en.md)).
 
 | Level | Tool | Where | What is tested |
 | --- | --- | --- | --- |

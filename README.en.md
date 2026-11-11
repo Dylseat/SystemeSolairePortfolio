@@ -62,7 +62,7 @@ Nothing is counted locally (`localhost`), and the site works normally if GoatCou
 
 ## Deployment
 
-The site is hosted by Infomaniak. On every merge into `main`, the CI checks the code (lint, build, unit and end-to-end tests), then uploads the `dist/` build to the server. How the pipeline works and how it is configured (secrets, variables) is detailed in [CICD.en.md](CICD.en.md).
+The site is hosted by Infomaniak. On every merge into `main`, the CI checks the code (lint, build, unit and end-to-end tests), then uploads the `dist/` build to the server. How the pipeline works and how it is configured (secrets, variables) is detailed in [CI/CD guide](.github/workflows/README.en.md).
 
 ## License
 

@@ -1,8 +1,8 @@
 # CI/CD
 
-🇫🇷 [Français](CICD.md) · 🇬🇧 **English**
+🇫🇷 [Français](README.md) · 🇬🇧 **English**
 
-Continuous integration and deployment run through a single GitHub Actions workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+Continuous integration and deployment run through a single GitHub Actions workflow: [`ci.yml`](ci.yml).
 
 ## When it runs
 
@@ -42,7 +42,7 @@ Each job runs on `ubuntu-latest` with Node 24 and installs dependencies with `np
 | Rapport des tests end-to-end | `node scripts/test-summary.mjs …` | French summary in the *Summary* tab |
 | Rapport Playwright détaillé | `actions/upload-artifact` | `rapport-playwright` artifact (screenshots, traces), kept 14 days |
 
-Test and report details are in [TESTS.en.md](TESTS.en.md).
+Test and report details are in [TESTS.en.md](../../TESTS.en.md).
 
 ### 3. Déploiement Infomaniak (Infomaniak deployment)
 
@@ -70,8 +70,8 @@ In GitHub, *Settings → Secrets and variables → Actions*:
 | `INFOMANIAK_PATH` | Variable | Site folder on the server, ending with `/` (files removed from the build are deleted there) |
 | `SITE_URL` | Variable | Public address of the site |
 
-The [`frontend/public/.htaccess`](frontend/public/.htaccess) file is deployed with the site: it redirects `http://` and `www.` to `https://dylandiaz.ch`.
+The [`frontend/public/.htaccess`](../../frontend/public/.htaccess) file is deployed with the site: it redirects `http://` and `www.` to `https://dylandiaz.ch`.
 
 ## Badges
 
-The two badges at the top of the [README](README.en.md) track the CI status on `main` and the latest production deployment.
+The two badges at the top of the [README](../../README.en.md) track the CI status on `main` and the latest production deployment.

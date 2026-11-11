@@ -60,7 +60,7 @@ Rien n'est compté en local (`localhost`), et le site fonctionne normalement si 
 
 ## Déploiement
 
-Le site est hébergé chez Infomaniak. À chaque fusion sur `main`, la CI vérifie le code (lint, build, tests unitaires et end-to-end), puis envoie le build `dist/` sur le serveur. Le fonctionnement du pipeline et sa configuration (secrets, variables) sont détaillés dans [CICD.md](CICD.md).
+Le site est hébergé chez Infomaniak. À chaque fusion sur `main`, la CI vérifie le code (lint, build, tests unitaires et end-to-end), puis envoie le build `dist/` sur le serveur. Le fonctionnement du pipeline et sa configuration (secrets, variables) sont détaillés dans [guide CI/CD](.github/workflows/README.md).
 
 ## Licence
 
