@@ -1,6 +1,8 @@
 # Tests
 
-Trois niveaux de tests, tous lancés automatiquement par la CI GitHub Actions à chaque push sur `main` et à chaque pull request.
+🇫🇷 **Français** · 🇬🇧 [English](TESTS.en.md)
+
+Trois niveaux de tests, tous lancés automatiquement par la CI GitHub Actions à chaque push sur `main` et à chaque pull request (voir [CICD.md](CICD.md)).
 
 | Niveau | Outil | Où | Ce qui est testé |
 | --- | --- | --- | --- |
