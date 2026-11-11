@@ -1,21 +1,23 @@
-# Portfolio — Système solaire
+# Portfolio — Solar System
 
-🇫🇷 **Français** · 🇬🇧 [English](README.en.md)
+🇫🇷 [Français](README.fr.md) · 🇬🇧 **English**
 
 [![CI](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Dylseat/SystemeSolairePortfolio/actions/workflows/ci.yml)
-[![Déploiement](https://img.shields.io/github/deployments/Dylseat/SystemeSolairePortfolio/production?label=d%C3%A9ploiement)](https://github.com/Dylseat/SystemeSolairePortfolio/deployments)
+[![Deployment](https://img.shields.io/github/deployments/Dylseat/SystemeSolairePortfolio/production?label=deployment)](https://github.com/Dylseat/SystemeSolairePortfolio/deployments)
 
-Mon CV sous forme de système solaire en 3D, en ligne sur [dylandiaz.ch](https://dylandiaz.ch) : chaque astre est une section du portfolio (présentation, compétences, technologies, expériences, formation, contact), avec un mini-jeu de tir spatial en 3D. Une version texte imprimable est disponible à tout moment, aussi à l'adresse `/#cv`, et le CV peut être téléchargé en PDF.
+My resume as a 3D solar system, live at [dylandiaz.ch](https://dylandiaz.ch): each celestial body is a section of the portfolio (about, skills, technologies, experience, education, contact), with a 3D space shooter mini-game. A printable text version is available at any time, also at `/#cv`, and the resume can be downloaded as a PDF.
+
+The site itself is in French.
 
 ## Stack
 
 - React, TypeScript, Vite
-- Three.js avec React Three Fiber et drei
+- Three.js with React Three Fiber and drei
 - Tailwind CSS
-- Hébergement chez Infomaniak (Suisse), déployé par GitHub Actions
-- Statistiques de visite anonymes avec GoatCounter
+- Hosted by Infomaniak (Switzerland), deployed with GitHub Actions
+- Anonymous visit statistics with GoatCounter
 
-## Lancer le projet
+## Running the project
 
 ```bash
 cd frontend
@@ -23,49 +25,49 @@ npm install
 npm run dev
 ```
 
-| Commande | Rôle |
+| Command | Purpose |
 | --- | --- |
-| `npm run dev` | Serveur de développement |
-| `npm run lint` | Vérification du code (ESLint) |
-| `npm run build` | Vérification des types et build de production dans `dist/` |
-| `npm run preview` | Sert le build de production en local |
-| `npm test` | Tests unitaires et fonctionnels (Vitest) |
-| `npm run test:e2e` | Tests end-to-end (Playwright) |
+| `npm run dev` | Development server |
+| `npm run lint` | Code linting (ESLint) |
+| `npm run build` | Type checking and production build into `dist/` |
+| `npm run preview` | Serves the production build locally |
+| `npm test` | Unit and functional tests (Vitest) |
+| `npm run test:e2e` | End-to-end tests (Playwright) |
 
-La liste des tests et leur rôle est détaillée dans [TESTS.md](TESTS.md).
+The list of tests and what each one covers is detailed in [TESTS.md](TESTS.md).
 
-## Contenu
+## Content
 
-Tout le contenu du CV se trouve dans [`frontend/src/data/planets.ts`](frontend/src/data/planets.ts). Il alimente à la fois la scène 3D et la version texte.
+All the resume content lives in [`frontend/src/data/planets.ts`](frontend/src/data/planets.ts). It feeds both the 3D scene and the text version.
 
-Le CV téléchargeable est [`frontend/public/CV-Dylan-Diaz.pdf`](frontend/public/CV-Dylan-Diaz.pdf). Pour le mettre à jour, remplacer ce fichier en gardant le même nom, avec une version allégée pour le web : sans téléphone, adresse complète, date de naissance ni nationalité.
+The downloadable resume is [`frontend/public/CV-Dylan-Diaz.pdf`](frontend/public/CV-Dylan-Diaz.pdf). To update it, replace this file keeping the same name, with a lighter version for the web: no phone number, full address, date of birth or nationality.
 
-## Statistiques
+## Statistics
 
-Les visites sont mesurées avec [GoatCounter](https://www.goatcounter.com) : anonyme, sans cookies, donc sans bandeau de consentement. Le tableau de bord est sur [dylseat.goatcounter.com](https://dylseat.goatcounter.com).
+Visits are measured with [GoatCounter](https://www.goatcounter.com): anonymous and cookie-free, so no consent banner is needed. The dashboard is at [dylseat.goatcounter.com](https://dylseat.goatcounter.com).
 
-En plus des visites, ces actions sont comptées comme événements (fonction `trackEvent` dans [`frontend/src/analytics.ts`](frontend/src/analytics.ts)) :
+On top of visits, these actions are counted as events (`trackEvent` function in [`frontend/src/analytics.ts`](frontend/src/analytics.ts)):
 
-| Événement | Quand |
+| Event | When |
 | --- | --- |
-| `section/<id>` | Ouverture d'une section, depuis la scène 3D ou le menu (par exemple `section/competences`) |
-| `version-texte` | Ouverture de la version texte depuis le menu |
-| `version-texte/lien-cv` | Arrivée directe sur la version texte par un lien `#cv` |
-| `imprimer-cv` | Clic sur « Imprimer / enregistrer en PDF » |
-| `telecharger-cv` | Clic sur « Télécharger mon CV (PDF) » |
-| `lien/<nom>` | Clic sur un lien de contact (par exemple `lien/linkedin`) |
-| `mini-jeu/partie` | Lancement d'une partie du mini-jeu |
+| `section/<id>` | A section is opened, from the 3D scene or the menu (for example `section/competences`) |
+| `version-texte` | The text version is opened from the menu |
+| `version-texte/lien-cv` | A visitor lands directly on the text version through a `#cv` link |
+| `imprimer-cv` | Click on "Imprimer / enregistrer en PDF" (print / save as PDF) |
+| `telecharger-cv` | Click on "Télécharger mon CV (PDF)" (download my resume) |
+| `lien/<name>` | Click on a contact link (for example `lien/linkedin`) |
+| `mini-jeu/partie` | A mini-game round is started |
 
-Rien n'est compté en local (`localhost`), et le site fonctionne normalement si GoatCounter est bloqué. Les visiteurs qui le bloquent ne sont pas comptés : les chiffres sont un minimum.
+Nothing is counted locally (`localhost`), and the site works normally if GoatCounter is blocked. Visitors who block it are not counted, so the figures are a minimum.
 
-## Déploiement
+## Deployment
 
-Le site est hébergé chez Infomaniak. À chaque fusion sur `main`, la CI vérifie le code (lint, build, tests unitaires et end-to-end), puis envoie le build `dist/` sur le serveur. Le fonctionnement du pipeline et sa configuration (secrets, variables) sont détaillés dans [guide CI/CD](.github/workflows/README.md).
+The site is hosted by Infomaniak. On every merge into `main`, the CI checks the code (lint, build, unit and end-to-end tests), then uploads the `dist/` build to the server. How the pipeline works and how it is configured (secrets, variables) is detailed in [CI/CD guide](.github/workflows/README.md).
 
-## Licence
+## License
 
-Le code est sous licence [MIT](LICENSE). Le contenu personnel (photo, CV, textes du parcours) n'est pas couvert par cette licence et reste la propriété de Dylan Diaz.
+The code is licensed under [MIT](LICENSE). Personal content (photo, resume, career texts) is not covered by this license and remains the property of Dylan Diaz.
 
-## Crédits
+## Credits
 
-La musique du mini-jeu ([`frontend/public/audio/mini-jeu.mp3`](frontend/public/audio/mini-jeu.mp3)) est « Mystics of the Cosmos » d'Unicorn Heads, compressée en MP3 80 kbit/s mono pour alléger le site. Elle n'est pas couverte par la licence MIT du code.
+The mini-game music ([`frontend/public/audio/mini-jeu.mp3`](frontend/public/audio/mini-jeu.mp3)) is "Mystics of the Cosmos" by Unicorn Heads, compressed to 80 kbit/s mono MP3 to keep the site light. It is not covered by the code's MIT license.

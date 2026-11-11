@@ -1,77 +1,77 @@
 # CI/CD
 
-🇫🇷 **Français** · 🇬🇧 [English](README.en.md)
+🇫🇷 [Français](README.fr.md) · 🇬🇧 **English**
 
-L'intégration et le déploiement continus passent par un seul workflow GitHub Actions : [`ci.yml`](ci.yml).
+Continuous integration and deployment run through a single GitHub Actions workflow: [`ci.yml`](ci.yml).
 
-## Quand il se lance
+## When it runs
 
-| Événement | Jobs lancés |
+| Event | Jobs run |
 | --- | --- |
-| Pull request (vers n'importe quelle branche) | Vérification, puis tests end-to-end |
-| Push sur `main` (fusion d'une pull request) | Vérification, tests end-to-end, puis déploiement |
+| Pull request (to any branch) | Checks, then end-to-end tests |
+| Push to `main` (pull request merge) | Checks, end-to-end tests, then deployment |
 
-Le workflow n'a que le droit de lire le dépôt (`permissions: contents: read`).
+The workflow can only read the repository (`permissions: contents: read`).
 
-## Les trois jobs
+## The three jobs
 
-Ils s'enchaînent : un job ne démarre que si le précédent a réussi.
+They run in sequence: a job only starts if the previous one succeeded. Job and step names are in French in the workflow; they are given as-is below.
 
 ```
 Lint, build et tests unitaires  →  Tests end-to-end  →  Déploiement Infomaniak
-                                                         (main uniquement)
+                                                         (main only)
 ```
 
-Chaque job tourne sur `ubuntu-latest`, avec Node 24, et installe les dépendances avec `npm ci` (cache npm basé sur `frontend/package-lock.json`).
+Each job runs on `ubuntu-latest` with Node 24 and installs dependencies with `npm ci` (npm cache keyed on `frontend/package-lock.json`).
 
-### 1. Lint, build et tests unitaires
+### 1. Lint, build et tests unitaires (lint, build and unit tests)
 
-| Étape | Commande | Rôle |
+| Step | Command | Purpose |
 | --- | --- | --- |
-| Lint | `npm run lint` | Règles ESLint |
-| Types et build | `npm run build` | Vérification TypeScript (`tsc -b`) et build Vite |
-| Tests unitaires et fonctionnels | `npm test` | Vitest, rapport JUnit dans `test-reports/unit-junit.xml` |
-| Rapport des tests unitaires | `node scripts/test-summary.mjs …` | Résumé en français dans l'onglet *Summary* du run, même si les tests échouent |
+| Lint | `npm run lint` | ESLint rules |
+| Types et build | `npm run build` | TypeScript check (`tsc -b`) and Vite build |
+| Tests unitaires et fonctionnels | `npm test` | Vitest, JUnit report in `test-reports/unit-junit.xml` |
+| Rapport des tests unitaires | `node scripts/test-summary.mjs …` | French summary in the run's *Summary* tab, even when tests fail |
 
 ### 2. Tests end-to-end
 
-| Étape | Commande | Rôle |
+| Step | Command | Purpose |
 | --- | --- | --- |
-| Installer Chromium | `npx playwright install --with-deps chromium` | Navigateur pour Playwright |
-| Tests end-to-end (bureau et mobile) | `npm run test:e2e` | Playwright sur le build de production, en Chrome bureau et Pixel 7 |
-| Rapport des tests end-to-end | `node scripts/test-summary.mjs …` | Résumé en français dans l'onglet *Summary* |
-| Rapport Playwright détaillé | `actions/upload-artifact` | Artefact `rapport-playwright` (captures, traces), gardé 14 jours |
+| Installer Chromium | `npx playwright install --with-deps chromium` | Browser for Playwright |
+| Tests end-to-end (bureau et mobile) | `npm run test:e2e` | Playwright against the production build, on desktop Chrome and Pixel 7 |
+| Rapport des tests end-to-end | `node scripts/test-summary.mjs …` | French summary in the *Summary* tab |
+| Rapport Playwright détaillé | `actions/upload-artifact` | `rapport-playwright` artifact (screenshots, traces), kept 14 days |
 
-Le détail des tests et des rapports est dans [TESTS.md](../../TESTS.md).
+Test and report details are in [TESTS.md](../../TESTS.md).
 
-### 3. Déploiement Infomaniak
+### 3. Déploiement Infomaniak (Infomaniak deployment)
 
-Il ne se lance que si les trois conditions sont réunies :
+It only runs when all three conditions are met:
 
-- l'événement est un push sur `main` ;
-- les tests end-to-end ont réussi ;
-- la variable `INFOMANIAK_HOST` est définie (sinon le job est ignoré).
+- the event is a push to `main`;
+- the end-to-end tests passed;
+- the `INFOMANIAK_HOST` variable is set (otherwise the job is skipped).
 
-Étapes : nouveau build de production (`npm run build`), puis envoi de `frontend/dist/` sur le serveur avec [FTP-Deploy-Action](https://github.com/SamKirkland/FTP-Deploy-Action). Seuls les fichiers modifiés sont envoyés, et les fichiers retirés du build sont supprimés du serveur (suivi dans `.ftp-deploy-sync-state.json`).
+Steps: a fresh production build (`npm run build`), then `frontend/dist/` is uploaded to the server with [FTP-Deploy-Action](https://github.com/SamKirkland/FTP-Deploy-Action). Only changed files are sent, and files removed from the build are deleted from the server (tracked in `.ftp-deploy-sync-state.json`).
 
-Le job utilise l'environnement GitHub `production` : chaque déploiement apparaît dans l'onglet *Deployments* du dépôt, avec le lien vers le site (`SITE_URL`). Deux déploiements ne tournent jamais en même temps (`concurrency: deploy-production`) : le second attend la fin du premier, sans l'annuler.
+The job uses the `production` GitHub environment: each deployment shows up in the repository's *Deployments* tab, with a link to the site (`SITE_URL`). Two deployments never run at the same time (`concurrency: deploy-production`): the second one waits for the first to finish without cancelling it.
 
-L'hébergement Starter n'accepte que le FTP non chiffré : le compte FTP est dédié au déploiement, et le passage à l'Hébergement Web permettra d'utiliser SFTP.
+The Starter hosting plan only accepts unencrypted FTP: the FTP account is dedicated to deployment, and moving to the Web Hosting plan will allow SFTP.
 
 ## Configuration
 
-Dans GitHub, *Settings → Secrets and variables → Actions* :
+In GitHub, *Settings → Secrets and variables → Actions*:
 
-| Nom | Type | Contenu |
+| Name | Type | Content |
 | --- | --- | --- |
-| `INFOMANIAK_FTP_PASSWORD` | Secret | Mot de passe du compte FTP de déploiement |
-| `INFOMANIAK_HOST` | Variable | Serveur FTP de l'hébergement |
-| `INFOMANIAK_USER` | Variable | Utilisateur FTP |
-| `INFOMANIAK_PATH` | Variable | Dossier du site sur le serveur, terminé par `/` (les fichiers retirés du build y sont supprimés) |
-| `SITE_URL` | Variable | Adresse publique du site |
+| `INFOMANIAK_FTP_PASSWORD` | Secret | Password of the deployment FTP account |
+| `INFOMANIAK_HOST` | Variable | FTP server of the hosting |
+| `INFOMANIAK_USER` | Variable | FTP user |
+| `INFOMANIAK_PATH` | Variable | Site folder on the server, ending with `/` (files removed from the build are deleted there) |
+| `SITE_URL` | Variable | Public address of the site |
 
-Le fichier [`frontend/public/.htaccess`](../../frontend/public/.htaccess) est déployé avec le site : il redirige `http://` et `www.` vers `https://dylandiaz.ch`.
+The [`frontend/public/.htaccess`](../../frontend/public/.htaccess) file is deployed with the site: it redirects `http://` and `www.` to `https://dylandiaz.ch`.
 
 ## Badges
 
-Les deux badges en haut du [README](../../README.md) suivent l'état de la CI sur `main` et du dernier déploiement en production.
+The two badges at the top of the [README](../../README.md) track the CI status on `main` and the latest production deployment.
